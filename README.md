@@ -10,7 +10,11 @@ Y to D7
 ## Decode the IR signal
 The code to decode the IR signal is inside forder hardware/arduino
 
-# Resources
+## Android
+
+## Resources
 ###### decode IR code
 https://www.circuitbasics.com/arduino-ir-remote-receiver-tutorial/
 https://www.instructables.com/IR-REMOTE-DECODER-USING-ARDUINO/
+###### android and arduino communication
+https://www.allaboutcircuits.com/projects/communicate-with-your-arduino-through-android/
