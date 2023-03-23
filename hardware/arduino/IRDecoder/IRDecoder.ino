@@ -10,10 +10,16 @@ void setup()
 
 void loop()
 {
+  char c;
   if (IrReceiver.decode())
   {
     Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
     IrReceiver.resume();
+  }
+
+  if (Serial.available()) {
+    c = Serial.read();
+    Serial.print(c);
   }
   delay(500);
 }

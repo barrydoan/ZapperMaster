@@ -62,9 +62,13 @@ public class UsbService extends Service {
         @Override
         public void onReceivedData(byte[] arg0) {
             try {
+                Log.d("AAA", "onReceivedData");
                 String data = new String(arg0, "UTF-8");
-                if (mHandler != null)
+                if (mHandler != null) {
+                    Log.d("AAA", "obtainMessage: " + data);
                     mHandler.obtainMessage(MESSAGE_FROM_SERIAL_PORT, data).sendToTarget();
+                }
+
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -99,6 +103,7 @@ public class UsbService extends Service {
     private final BroadcastReceiver usbReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context arg0, Intent arg1) {
+            Log.d("AAA", "onReceive(): ");
             if (arg1.getAction().equals(ACTION_USB_PERMISSION)) {
                 boolean granted = arg1.getExtras().getBoolean(UsbManager.EXTRA_PERMISSION_GRANTED);
                 if (granted) // User accepted our USB connection. Try to open the device as a serial port
@@ -231,7 +236,7 @@ public class UsbService extends Service {
      */
     private void requestUserPermission() {
         Log.d(TAG, String.format("requestUserPermission(%X:%X)", device.getVendorId(), device.getProductId() ) );
-        PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), 0);
+        PendingIntent mPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(ACTION_USB_PERMISSION), PendingIntent.FLAG_MUTABLE);
         usbManager.requestPermission(device, mPendingIntent);
     }
 
