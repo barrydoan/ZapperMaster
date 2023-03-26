@@ -1,0 +1,125 @@
+{
+  "buttons": [
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.10,
+      "left_position_percent": 0.5,
+      "display_name": "Menu",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.03,
+      "left_position_percent": 0.5,
+      "display_name": "Up",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.17,
+      "left_position_percent": 0.5,
+      "display_name": "Down",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.10,
+      "left_position_percent": 0.25,
+      "display_name": "Left",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.10,
+      "left_position_percent": 0.75,
+      "display_name": "Right",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.25,
+      "left_position_percent": 0.25,
+      "display_name": "1",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.25,
+      "left_position_percent": 0.50,
+      "display_name": "2",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.25,
+      "left_position_percent": 0.75,
+      "display_name": "3",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.32,
+      "left_position_percent": 0.25,
+      "display_name": "4",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.32,
+      "left_position_percent": 0.50,
+      "display_name": "5",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.32,
+      "left_position_percent": 0.75,
+      "display_name": "6",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.39,
+      "left_position_percent": 0.25,
+      "display_name": "7",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.39,
+      "left_position_percent": 0.50,
+      "display_name": "8",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.39,
+      "left_position_percent": 0.75,
+      "display_name": "9",
+      "code": "F23465"
+    },
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.46,
+      "left_position_percent": 0.5,
+      "display_name": "0",
+      "code": "F23465"
+    }
+
+  ]
+}
