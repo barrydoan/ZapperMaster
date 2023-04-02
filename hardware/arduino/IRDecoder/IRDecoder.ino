@@ -18,8 +18,10 @@ void loop()
   }
 
   if (Serial.available()) {
-    c = Serial.read();
-    Serial.print(c);
+	while(Serial.available()) {
+		c = Serial.read();
+		Serial.print(c);
+	}
   }
   delay(500);
 }
