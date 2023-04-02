@@ -6,16 +6,21 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Message
 import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import java.lang.ref.WeakReference
 import java.nio.charset.StandardCharsets
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), IrInterface {
+
+    val remoteViewModel: RemoteViewModel by lazy {
+        ViewModelProvider(this)[RemoteViewModel::class.java]
+    }
+
     /*
      * Notifications from UsbService will be received here.
      */
@@ -51,8 +56,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private var usbService: UsbService? = null
-    private var display: TextView? = null
-    private var editText: EditText? = null
     private var mHandler: MyHandler? = null
     private val usbConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(arg0: ComponentName, arg1: IBinder) {
@@ -69,16 +72,29 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mHandler = MyHandler(this)
-        display = findViewById<View>(R.id.textView1) as TextView
-        editText = findViewById<View>(R.id.editText1) as EditText
-        val sendButton = findViewById<View>(R.id.buttonSend) as Button
-        sendButton.setOnClickListener {
-            if (editText!!.text.toString() != "") {
-                val data = editText!!.text.toString()
-                if (usbService != null) { // if UsbService was correctly binded, Send data
-                    usbService?.write(data.toByteArray(StandardCharsets.UTF_8))
-                }
+
+
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.app_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.test -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_view, TestFragment.newInstance("", ""))
+                    .commit()
+                true
             }
+
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -138,12 +154,28 @@ class MainActivity : AppCompatActivity() {
             mActivity = WeakReference(activity)
         }
 
+        var command: StringBuilder = java.lang.StringBuilder("")
+
         override fun handleMessage(msg: Message) {
             when (msg.what) {
                 UsbService.MESSAGE_FROM_SERIAL_PORT -> {
                     val data = msg.obj as String
                     Log.d("AAA", "message for serial port: $data")
-                    mActivity.get()!!.display!!.append(data)
+                    if (data.contains('[')) {
+                        Log.d("AAA", "Start")
+                        command = java.lang.StringBuilder()
+                        command.append(data)
+                    }
+                    else if (!data.contains(']')) {
+                        Log.d("AAA", "Middle")
+                        command.append(data)
+                    }
+                    else {
+                        Log.d("AAA", "End")
+                        command.append(data)
+                        mActivity.get()!!.remoteViewModel.setLastIrCode(command.toString())
+                    }
+                    //mActivity.get()!!.display!!.append(data)
                 }
                 UsbService.CTS_CHANGE -> Toast.makeText(
                     mActivity.get(),
@@ -156,6 +188,12 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+        }
+    }
+
+    override fun sendIrCode(code: String) {
+        if (usbService != null) { // if UsbService was correctly binded, Send data
+            usbService!!.write(code.toByteArray(StandardCharsets.UTF_8))
         }
     }
 }
