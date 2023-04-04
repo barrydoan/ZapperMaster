@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import org.json.JSONObject
@@ -78,30 +79,31 @@ class RemoteFragment : Fragment() {
             button.height = 150
             button.cornerRadius = 50
             button.iconSize = 75
-            button.backgroundTintList = getResources().getColorStateList(R.color.ic_tint_color)
+            button.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.ic_tint_color)
             Log.d("AAA: Button Name", buttonDTO.displayName)
 
             if (buttonDTO.displayName == "PresetUp") {
-                button.icon = getResources().getDrawable(R.drawable.ic_skip_next)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_skip_next)
             } else if (buttonDTO.displayName == "Off") {
-                button.icon = getResources().getDrawable(R.drawable.ic_power)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_power)
             } else if (buttonDTO.displayName == "Up") {
-                button.icon = getResources().getDrawable(R.drawable.ic_arrow_up)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_up)
             } else if (buttonDTO.displayName == "Down") {
-                button.icon = getResources().getDrawable(R.drawable.ic_arrow_down)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_down)
             } else if (buttonDTO.displayName == "presetDown") {
-                button.icon = getResources().getDrawable(R.drawable.ic_skip_previous)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_skip_previous)
             } else if (buttonDTO.displayName == "VolUp") {
-                button.icon = getResources().getDrawable(R.drawable.ic_volume_up)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_volume_up)
             } else if (buttonDTO.displayName == "ChannelUp") {
-                button.icon = getResources().getDrawable(R.drawable.ic_add)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_add)
             } else if (buttonDTO.displayName == "VolDown") {
-                button.icon = getResources().getDrawable(R.drawable.ic_volume_down)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_volume_down)
             } else if (buttonDTO.displayName == "ChannelDown") {
-                button.icon = getResources().getDrawable(R.drawable.ic_remove)
+                button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove)
             } else {
                 button.text = buttonDTO.displayName
             }
+            button.text = buttonDTO.displayName
 
 
             Log.d("AAA", "${button.width}")
@@ -114,6 +116,12 @@ class RemoteFragment : Fragment() {
             layoutParam.topMargin = (buttonDTO.topPositionPercent * heigh).toInt()
 
             button.layoutParams = layoutParam
+            button.setOnClickListener {
+                var button = it as Button
+                var code = findCommandByText(button.text.toString(), buttonDTOList)
+                Log.d("AAA", "Send code $code")
+                (activity as IrInterface).sendIrCode(code)
+            }
 //            ConstraintLayout.addView(button)
             (layout2 as RelativeLayout).addView(button)
         }
@@ -121,7 +129,16 @@ class RemoteFragment : Fragment() {
         return layout
     }
 
-
+    fun findCommandByText(text: String, buttonList: List<ButtonDTO>): String {
+        var result = "";
+        for (buttonDTO in buttonList) {
+            if (buttonDTO.displayName == text) {
+                result = buttonDTO.code
+                break;
+            }
+        }
+        return result;
+    }
 
     fun getRemoteFile(filename: String, context: Context): String {
         var manager : AssetManager = context.assets
