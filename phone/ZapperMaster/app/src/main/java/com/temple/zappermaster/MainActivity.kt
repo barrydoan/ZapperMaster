@@ -1,6 +1,7 @@
 package com.temple.zappermaster
 
 import android.content.*
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -90,6 +91,13 @@ class MainActivity : AppCompatActivity(), IrInterface {
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container_view, TestFragment.newInstance("", ""))
+                    .commit()
+                true
+            }
+            R.id.remote -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_view,RemoteFragment.newInstance("",""))
                     .commit()
                 true
             }
@@ -190,6 +198,8 @@ class MainActivity : AppCompatActivity(), IrInterface {
             }
         }
     }
+
+
 
     override fun sendIrCode(code: String) {
         if (usbService != null) { // if UsbService was correctly binded, Send data
