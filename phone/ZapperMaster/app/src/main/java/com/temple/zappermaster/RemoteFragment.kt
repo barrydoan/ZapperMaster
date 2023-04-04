@@ -82,23 +82,23 @@ class RemoteFragment : Fragment() {
             button.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.ic_tint_color)
             Log.d("AAA: Button Name", buttonDTO.displayName)
 
-            if (buttonDTO.displayName == "PresetUp") {
+            if (buttonDTO.displayName == Constants.ICON_PRESET_UP) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_skip_next)
-            } else if (buttonDTO.displayName == "Off") {
+            } else if (buttonDTO.displayName == Constants.ICON_OFF) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_power)
-            } else if (buttonDTO.displayName == "Up") {
+            } else if (buttonDTO.displayName == Constants.ICON_UP) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_up)
-            } else if (buttonDTO.displayName == "Down") {
+            } else if (buttonDTO.displayName == Constants.ICON_Down) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_arrow_down)
-            } else if (buttonDTO.displayName == "presetDown") {
+            } else if (buttonDTO.displayName == Constants.ICON_PRESET_DOWN) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_skip_previous)
-            } else if (buttonDTO.displayName == "VolUp") {
+            } else if (buttonDTO.displayName == Constants.ICON_VOL_UP) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_volume_up)
-            } else if (buttonDTO.displayName == "ChannelUp") {
+            } else if (buttonDTO.displayName == Constants.ICON_CHANNEL_UP) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_add)
-            } else if (buttonDTO.displayName == "VolDown") {
+            } else if (buttonDTO.displayName == Constants.ICON_VOL_DOWN) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_volume_down)
-            } else if (buttonDTO.displayName == "ChannelDown") {
+            } else if (buttonDTO.displayName == Constants.ICON_CHANNEL_DOWN) {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove)
             } else {
                 button.text = buttonDTO.displayName
