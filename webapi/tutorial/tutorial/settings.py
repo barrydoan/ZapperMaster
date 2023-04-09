@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "polls.apps.PollsConfig",
+    "tutorial.quickstart.apps.QuickstartConfig"
 ]
 
 MIDDLEWARE = [
