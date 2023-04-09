@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GroupSerializer, QuestionSerializer
-from .models import Question
+from .serializers import UserSerializer, GroupSerializer, QuestionSerializer, RemoteSerializer, ButtonSerializer
+from .models import Question, Remote, Button
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -29,4 +29,22 @@ class QuestionViewSet(viewsets.ModelViewSet):
     """
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ButtonViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Button.objects.all()
+    serializer_class = ButtonSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class RemoteViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Remote.objects.all()
+    serializer_class = RemoteSerializer
     permission_classes = [permissions.IsAuthenticated]
