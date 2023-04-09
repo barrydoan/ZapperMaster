@@ -23,3 +23,41 @@ class Choice(models.Model):
         return self.choice_text
 
 
+class User(models.Model):
+    username = models.CharField(max_length=20)
+    password = models.CharField(max_length=20)
+    firstname = models.CharField(max_length=20)
+    lastname = models.CharField(max_length=20)
+    email = models.CharField(max_length=20)
+
+
+class Token(models.Model):
+    token = models.CharField(max_length=20)
+    is_valid = models.BooleanField
+    created_date = models.DateTimeField
+
+
+class Manufacture(models.Model):
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=20)
+
+
+class Type(models.Model):
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=20)
+
+
+class Remote(models.Model):
+    downloads = models.ManyToManyField(User, blank=True, null=True)
+    model_number = models.CharField(max_length=20)
+    shared = models.BooleanField(default=False)
+
+
+class Button(models.Model):
+    remote = models.ForeignKey(Remote,  related_name='buttons', on_delete=models.CASCADE)
+    background_color = models.CharField(max_length=20)
+    size = models.CharField(max_length=20)
+    top_position_percent = models.FloatField(default=0.0)
+    left_position_percent = models.FloatField(default=0.0)
+    display_name = models.CharField(max_length=20)
+    code = models.CharField(max_length=20)
