@@ -1,5 +1,6 @@
 package com.temple.zappermaster
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.AssetManager
 import android.content.res.Resources
@@ -9,9 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
@@ -42,13 +41,14 @@ class RemoteFragment : Fragment() {
         }
     }
 
+    @SuppressLint("ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         var layout =  inflater.inflate(R.layout.fragment_remote, container, false)
-        var jsonString = getRemoteFile("remote_ui.json", requireContext())
+        var jsonString = getRemoteFile("device1.json", requireContext())
         var jsonObject = JSONObject(jsonString)
         var jsonArray = jsonObject.getJSONArray("buttons")
         // convert to buttonDTO
@@ -79,7 +79,7 @@ class RemoteFragment : Fragment() {
             button.height = 150
             button.cornerRadius = 50
             button.iconSize = 75
-            button.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.ic_tint_color)
+            button.backgroundTintList = ContextCompat.getColorStateList(requireContext(),R.color.ic_tint_color)
             Log.d("AAA: Button Name", buttonDTO.displayName)
 
             if (buttonDTO.displayName == Constants.ICON_PRESET_UP) {

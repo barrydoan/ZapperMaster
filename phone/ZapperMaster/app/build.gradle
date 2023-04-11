@@ -31,8 +31,16 @@ android {
         jvmTarget = '1.8'
     }
 }
+apply plugin: 'kotlin-kapt'
 
 dependencies {
+    implementation 'com.beust:klaxon:5.5'
+    implementation 'com.android.volley:volley:1.2.1'
+
+    def room_version = "2.5.1" // check latest version from docs
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+
     def fragment_version = "1.5.6"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -44,4 +52,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
 }
+

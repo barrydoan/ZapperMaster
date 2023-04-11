@@ -9,6 +9,30 @@ class RemoteViewModel : ViewModel() {
         MutableLiveData<String>()
     }
 
+    private val remoteList : MutableLiveData<RemoteList> by lazy {
+        MutableLiveData<RemoteList>()
+    }
+
+    private val selectedRemote : MutableLiveData<RemoteObj?> by lazy {
+        MutableLiveData<RemoteObj?>()
+    }
+
+    fun setRemoteList(_remoteList: RemoteList){
+        remoteList.value = _remoteList
+    }
+
+    fun getRemoteList(): LiveData<RemoteList>{
+        return remoteList
+    }
+
+    fun setSelectedRemote(remote: RemoteObj?){
+        selectedRemote.value = remote
+    }
+
+    fun getSelectedRemote():LiveData<RemoteObj?>{
+        return selectedRemote
+    }
+
     fun setLastIrCode(value: String) {
         lastIrCode.postValue(value)
     }
