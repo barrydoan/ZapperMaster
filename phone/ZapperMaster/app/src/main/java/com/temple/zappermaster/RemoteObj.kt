@@ -8,5 +8,5 @@ data class RemoteObj(
     @Json(name = "shared")
     val shared: Boolean,
     @Json(name = "buttons")
-    val buttons: String,
+    val buttons: String
 )

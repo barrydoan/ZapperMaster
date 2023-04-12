@@ -90,6 +90,26 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         )
             .allowMainThreadQueries()
             .build()
+
+        val remoteArray = ArrayList<RemoteObj>()
+        var jsonString = getRemoteFile("device1.json", this)
+        for (i in jsonString.indices) {
+            val remote = Klaxon().parse<RemoteObj>(jsonString)
+            remote?.run {
+                remoteArray.add(remote)
+                Log.d("AAA",remote.toString())
+            }
+
+        }
+        var remoteList =remoteViewModel.getRemoteList().value
+        if(remoteList== null){
+            remoteList = RemoteList()
+        }
+        remoteList.addAll(remoteArray)
+        remoteViewModel.setRemoteList(remoteList)
+        remoteViewModel.setSelectedRemote(null)
+        Log.d("AAA", "Write remote list to database");
+        updateRemoteListToDatabase(remoteArray)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -242,28 +262,36 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         remoteViewModel.setSelectedRemote(usingRemote)
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        val remoteArray = ArrayList<RemoteObj>()
-        var jsonString = getRemoteFile("device1.json", this)
-        for (i in jsonString.indices) {
-            val remote = Klaxon().parse<RemoteObj>(jsonString)
-            remote?.run {
-                remoteArray.add(remote)
-            }
-
-        }
-        var remoteList =remoteViewModel.getRemoteList().value
-        if(remoteList== null){
-            remoteList = RemoteList()
-        }
-        remoteList.addAll(remoteArray)
-        remoteViewModel.setRemoteList(remoteList)
-        remoteViewModel.setSelectedRemote(null)
-        Log.d("AAA", "Write remote list to database");
-        updateRemoteListToDatabase(remoteArray)
-
-    }
+//    override fun onNewIntent(intent: Intent) {
+//        super.onNewIntent(intent)
+//        setIntent(intent)
+//        handleIntent(intent)
+//    }
+//
+//    private fun handleIntent(intent: Intent) {
+//        super.onNewIntent(intent)
+//
+//        val remoteArray = ArrayList<RemoteObj>()
+//        var jsonString = getRemoteFile("device1.json", this)
+//        for (i in jsonString.indices) {
+//            val remote = Klaxon().parse<RemoteObj>(jsonString)
+//            remote?.run {
+//                remoteArray.add(remote)
+//                Log.d("AAA",remote.toString())
+//            }
+//
+//        }
+//        var remoteList =remoteViewModel.getRemoteList().value
+//        if(remoteList== null){
+//            remoteList = RemoteList()
+//        }
+//        remoteList.addAll(remoteArray)
+//        remoteViewModel.setRemoteList(remoteList)
+//        remoteViewModel.setSelectedRemote(null)
+//        Log.d("AAA", "Write remote list to database");
+//        updateRemoteListToDatabase(remoteArray)
+//
+//    }
     fun getRemoteFile(filename: String, context: Context): String {
         var manager : AssetManager = context.assets
         var file = manager.open(filename)

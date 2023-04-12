@@ -4,18 +4,18 @@ import androidx.room.*
 
 @Dao
 interface RemoteDetailDao {
-    @Query("SELECT * FROM playingDetail")
-    fun getAll(): List<Remote>
+    @Query("SELECT * FROM RemoteDetail")
+    fun getAll(): List<RemoteDetail>
 
-    @Query("SELECT * FROM playingDetail WHERE id = :id")
-    fun loadAllById(id: Int): Remote
+    @Query("SELECT * FROM RemoteDetail WHERE model_number = :model_number")
+    fun loadAllByModel(model_number: String): RemoteDetail
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(playingDetail: Remote)
+    fun insertAll(RemoteDetail: RemoteDetail)
 
     @Delete
-    fun delete(playingDetail: Remote)
+    fun delete(RemoteDetail: RemoteDetail)
 
-    @Query("SELECT EXISTS(SELECT * FROM playingDetail WHERE id = :id)")
-    fun isRowIsExist(name : String) : Boolean
+    @Query("SELECT EXISTS(SELECT * FROM RemoteDetail WHERE model_number = :model_number)")
+    fun isRowIsExist(model_number : String) : Boolean
 }

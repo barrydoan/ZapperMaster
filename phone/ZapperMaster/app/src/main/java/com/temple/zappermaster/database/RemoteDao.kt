@@ -10,6 +10,6 @@ interface RemoteDao {
     fun insertAll(books: List<Remote>)
     @Query("UPDATE remote set is_deleted = 1")
     fun deleteAll()
-    @Query("SELECT * FROM remote WHERE model_number = :id")
-    fun loadAllByModel(name: String): Remote
+    @Query("SELECT * FROM remote WHERE model_number = :model_number")
+    fun loadAllByModel(model_number: String): Remote
 }

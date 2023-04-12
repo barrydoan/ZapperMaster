@@ -1,5 +1,7 @@
 package com.temple.zappermaster
 
+import android.content.Context
+import android.content.res.AssetManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -29,17 +31,26 @@ class RemoteListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_remotelist, container, false)
     }
 
+    fun getRemoteFile(filename: String, context: Context): String {
+        var manager : AssetManager = context.assets
+        var file = manager.open(filename)
+        var bytes = ByteArray(file.available())
+        file.read(bytes)
+        file.close()
+        return String(bytes)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(view as RecyclerView) {
             // empty list for first load
             var remoteList: RemoteList
             if (remoteViewModel.getRemoteList().value != null) {
-                Log.d("AAA", "Booklist from live data")
+                Log.d("AAA", "Remote list from live data")
                 remoteList = remoteViewModel.getRemoteList().value!!
             }
             else {
-                Log.d("AAA", "New booklist")
+                Log.d("AAA", "New remote list")
                 remoteList = RemoteList()
                 remoteViewModel.setRemoteList(remoteList)
             }
@@ -55,11 +66,13 @@ class RemoteListFragment : Fragment() {
             addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             remoteViewModel.getRemoteList().observe(requireActivity()) {
                 // notify the dataset is changed
-                Log.d("AAA", "BookList change")
+                Log.d("AAA", "Remote list change")
                 this.adapter?.notifyDataSetChanged()
             }
 
         }
+
+
     }
 
     class RemoteAdapter(_remoteList: RemoteList, _clickEvent: (remote:RemoteObj)->Unit): RecyclerView.Adapter<RemoteAdapter.RemoteViewHolder>() {
