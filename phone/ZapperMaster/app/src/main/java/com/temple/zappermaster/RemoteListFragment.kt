@@ -57,6 +57,7 @@ class RemoteListFragment : Fragment() {
             // click event
             val clickEven = {remote:RemoteObj -> Unit
                 remoteViewModel.setSelectedRemote(remote)
+                Log.d("AAA","set selected remote- $remote")
                 // notify the main that a book is selected
                 (requireActivity() as SelectionFragmentInterface).remoteSelected()
             }
@@ -80,7 +81,7 @@ class RemoteListFragment : Fragment() {
         val clickEven = _clickEvent
 
         inner class RemoteViewHolder(_view: View) : RecyclerView.ViewHolder(_view) {
-            val titleTxt: TextView = _view.findViewById(R.id.remoteModel)
+            val titleTxt: TextView = _view.findViewById(R.id.textView)
 
         }
 

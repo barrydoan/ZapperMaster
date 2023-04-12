@@ -16,8 +16,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.beust.klaxon.Klaxon
 import com.temple.zappermaster.database.AppDatabase
+import com.temple.zappermaster.database.Remote
 import com.temple.zappermaster.database.RemoteConverter
 import com.temple.zappermaster.database.RemoteDetail
+import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.nio.charset.StandardCharsets
 
@@ -91,25 +93,35 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
             .allowMainThreadQueries()
             .build()
 
+
         val remoteArray = ArrayList<RemoteObj>()
         var jsonString = getRemoteFile("device1.json", this)
-        for (i in jsonString.indices) {
-            val remote = Klaxon().parse<RemoteObj>(jsonString)
-            remote?.run {
-                remoteArray.add(remote)
-                Log.d("AAA",remote.toString())
-            }
+        var jsonObject = JSONObject(jsonString)
+        var jsonModel = jsonObject.getString("model_number")
+        Log.d("AAA",jsonModel)
+        var jsonButtons = jsonObject.getString("buttons")
+        Log.d("AAA",jsonButtons)
+        var jsonShared = jsonObject.getBoolean("shared")
+        Log.d("AAA",jsonShared.toString())
 
-        }
         var remoteList =remoteViewModel.getRemoteList().value
         if(remoteList== null){
             remoteList = RemoteList()
         }
+
+        Log.d("AAA", "Write remote list to database");
+
+        var remoteObj = RemoteObj(jsonModel, jsonShared, jsonButtons)
+        updateremoteToDatabase(remoteObj)
+        // update view model
+        var remoteListDao = db.remoteDao().getAll()
+        var remoteConverter = RemoteConverter()
+        var remoteObjList = remoteConverter.toObjList(remoteListDao)
+        remoteArray.addAll(remoteObjList)
+
         remoteList.addAll(remoteArray)
         remoteViewModel.setRemoteList(remoteList)
         remoteViewModel.setSelectedRemote(null)
-        Log.d("AAA", "Write remote list to database");
-        updateRemoteListToDatabase(remoteArray)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -239,13 +251,19 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         }
     }
 
-    private fun updateRemoteListToDatabase(bookArray: ArrayList<RemoteObj>) {
-        // delete the book list first
-        db.remoteDao().deleteAll()
-        // store list to database
-        val bookDaoList = RemoteConverter().toDaoList(bookArray)
-        db.remoteDao().insertAll(bookDaoList)
+    private fun updateremoteToDatabase(remote: RemoteObj){
+        var remoteConverter = RemoteConverter()
+        val remoteDao = remoteConverter.toDao(remote)
+        db.remoteDao().insert(remoteDao)
     }
+
+//    private fun updateRemoteListToDatabase(bookArray: ArrayList<RemoteObj>) {
+//        // delete the book list first
+//        db.remoteDao().deleteAll()
+//        // store list to database
+//        val bookDaoList = RemoteConverter().toDaoList(bookArray)
+//        db.remoteDao().insertAll(bookDaoList)
+//    }
 //    override fun onRestart() {
 //        super.onRestart()
 //        // restart the app
@@ -262,22 +280,14 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         remoteViewModel.setSelectedRemote(usingRemote)
     }
 
-//    override fun onNewIntent(intent: Intent) {
+//    override fun onNewIntent(intent: Intent?) {
 //        super.onNewIntent(intent)
-//        setIntent(intent)
-//        handleIntent(intent)
-//    }
-//
-//    private fun handleIntent(intent: Intent) {
-//        super.onNewIntent(intent)
-//
 //        val remoteArray = ArrayList<RemoteObj>()
 //        var jsonString = getRemoteFile("device1.json", this)
 //        for (i in jsonString.indices) {
 //            val remote = Klaxon().parse<RemoteObj>(jsonString)
 //            remote?.run {
 //                remoteArray.add(remote)
-//                Log.d("AAA",remote.toString())
 //            }
 //
 //        }
@@ -314,6 +324,10 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
                 selectedBook.shared,
                 selectedBook.buttons
             )
+
+        }
+        else{
+
         }
 
 
