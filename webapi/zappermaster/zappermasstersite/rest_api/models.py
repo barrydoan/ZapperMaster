@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Question(models.Model):
@@ -23,20 +24,6 @@ class Choice(models.Model):
         return self.choice_text
 
 
-class User(models.Model):
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
-    firstname = models.CharField(max_length=20)
-    lastname = models.CharField(max_length=20)
-    email = models.CharField(max_length=20)
-
-
-class Token(models.Model):
-    token = models.CharField(max_length=20)
-    is_valid = models.BooleanField
-    created_date = models.DateTimeField
-
-
 class Manufacture(models.Model):
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=20)
@@ -48,9 +35,15 @@ class Type(models.Model):
 
 
 class Remote(models.Model):
-    downloads = models.ManyToManyField(User, blank=True, null=True)
+    downloads = models.ManyToManyField(User, related_name='downloads')
+    created = models.ForeignKey(User, related_name='created', on_delete=models.CASCADE)
+    type = models.ForeignKey(Type, related_name='type', on_delete=models.CASCADE)
+    manufacture = models.ForeignKey(Manufacture, related_name='manufacture', on_delete=models.CASCADE)
     model_number = models.CharField(max_length=20)
     shared = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.model_number
 
 
 class Button(models.Model):
@@ -61,3 +54,6 @@ class Button(models.Model):
     left_position_percent = models.FloatField(default=0.0)
     display_name = models.CharField(max_length=20)
     code = models.CharField(max_length=20)
+
+    def __str__(self):
+        return self.background_color

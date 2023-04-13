@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from .models import Question, Remote, Button
+from .models import Question, Choice, Remote, Button, Type, Manufacture
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -18,7 +18,15 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
 class QuestionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Question
-        fields = ['question_text', 'pub_date']
+        fields = ['id', 'question_text', 'pub_date']
+
+
+class ChoiceSerializer(serializers.HyperlinkedModelSerializer):
+    question = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
+
+    class Meta:
+        model = Choice
+        fields = ['choice_text', 'question']
 
 
 class ButtonSerializer(serializers.HyperlinkedModelSerializer):
@@ -28,8 +36,37 @@ class ButtonSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class RemoteSerializer(serializers.HyperlinkedModelSerializer):
-    buttons = ButtonSerializer(many=True, read_only=True)
+    buttons = ButtonSerializer(many=True)
+    created = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    type = serializers.PrimaryKeyRelatedField(queryset=Type.objects.all())
+    manufacture = serializers.PrimaryKeyRelatedField(queryset=Manufacture.objects.all())
+    download = serializers.IntegerField(
+        source='downloads.count',
+        read_only=True
+    )
 
     class Meta:
         model = Remote
-        fields = ['model_number', 'shared', 'buttons']
+        fields = ['id', 'model_number', 'shared', 'buttons', 'created', 'type', 'manufacture', 'download']
+
+    def create(self, validated_data):
+        buttons_data = validated_data.pop('buttons')
+        remote = Remote.objects.create(**validated_data)
+        if buttons_data:
+            for button_data in buttons_data:
+                Button.objects.create(remote=remote, **button_data)
+        return remote
+
+
+class TypeSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Type
+        fields = ['id', 'name', 'description']
+
+
+class ManufactureSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Manufacture
+        fields = ['id', 'name', 'description']
+
+
