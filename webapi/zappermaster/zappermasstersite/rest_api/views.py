@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer, GroupSerializer, QuestionSerializer, RemoteSerializer, ButtonSerializer
-from .models import Question, Remote, Button
+from .serializers import UserSerializer, GroupSerializer, QuestionSerializer, ChoiceSerializer, RemoteSerializer, \
+    ButtonSerializer, TypeSerializer, ManufactureSerializer
+from .models import Question, Choice, Remote, Button, Type, Manufacture
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -32,6 +33,15 @@ class QuestionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class ChoiceViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Choice.objects.all()
+    serializer_class = ChoiceSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 class ButtonViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
@@ -47,4 +57,22 @@ class RemoteViewSet(viewsets.ModelViewSet):
     """
     queryset = Remote.objects.all()
     serializer_class = RemoteSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class TypeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Type.objects.all()
+    serializer_class = TypeSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
+class ManufactureViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows groups to be viewed or edited.
+    """
+    queryset = Manufacture.objects.all()
+    serializer_class = ManufactureSerializer
     permission_classes = [permissions.IsAuthenticated]
