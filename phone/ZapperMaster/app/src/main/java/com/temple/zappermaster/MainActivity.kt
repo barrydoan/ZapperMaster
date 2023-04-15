@@ -14,11 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
-import com.beust.klaxon.Klaxon
 import com.temple.zappermaster.database.AppDatabase
-import com.temple.zappermaster.database.Remote
 import com.temple.zappermaster.database.RemoteConverter
-import com.temple.zappermaster.database.RemoteDetail
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.nio.charset.StandardCharsets
@@ -104,24 +101,37 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         var jsonShared = jsonObject.getBoolean("shared")
         Log.d("AAA",jsonShared.toString())
 
+        var remoteObj1 = RemoteObj(jsonModel, jsonShared, jsonButtons)
+        updateremoteToDatabase(remoteObj1)
+
+        var jsonString2 = getRemoteFile("device2.json", this)
+        var jsonObject2 = JSONObject(jsonString2)
+        var jsonModel2 = jsonObject2.getString("model_number")
+        Log.d("AAA",jsonModel2)
+        var jsonButtons2 = jsonObject2.getString("buttons")
+        Log.d("AAA",jsonButtons2)
+        var jsonShared2 = jsonObject2.getBoolean("shared")
+        Log.d("AAA",jsonShared2.toString())
+
+        var remoteObj2 = RemoteObj(jsonModel2,jsonShared2,jsonButtons2)
+        updateremoteToDatabase(remoteObj2)
+
+
         var remoteList =remoteViewModel.getRemoteList().value
         if(remoteList== null){
             remoteList = RemoteList()
         }
-
-        Log.d("AAA", "Write remote list to database");
-
-        var remoteObj = RemoteObj(jsonModel, jsonShared, jsonButtons)
-        updateremoteToDatabase(remoteObj)
+        Log.d("AAA", "Write remote list to database")
         // update view model
         var remoteListDao = db.remoteDao().getAll()
         var remoteConverter = RemoteConverter()
         var remoteObjList = remoteConverter.toObjList(remoteListDao)
         remoteArray.addAll(remoteObjList)
-
+        Log.d("AAA", "Remote Array - $remoteArray")
         remoteList.addAll(remoteArray)
         remoteViewModel.setRemoteList(remoteList)
         remoteViewModel.setSelectedRemote(null)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -312,23 +322,15 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
     }
 
     override fun remoteSelected() {
+
+        val selectedBook = remoteViewModel.getSelectedRemote().value
+        if (selectedBook != null) {
+            Log.d("AAA","atMain-${selectedBook.buttons}")
+        }
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container_view, RemoteFragment())
             .commit()
-        val selectedBook = remoteViewModel.getSelectedRemote().value
-        if(selectedBook != null){
-            val isInDatabase = db.remoteDetailDao().isRowIsExist(selectedBook.model_number)
-            val remoteDetail = RemoteDetail(
-                selectedBook.model_number,
-                selectedBook.shared,
-                selectedBook.buttons
-            )
-
-        }
-        else{
-
-        }
 
 
     }

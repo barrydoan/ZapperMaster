@@ -15,7 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.button.MaterialButton
-import org.json.JSONObject
+import org.json.JSONArray
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -23,20 +23,20 @@ import org.json.JSONObject
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+
+
 /**
  * A simple [Fragment] subclass.
  * Use the [RemoteFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 class RemoteFragment : Fragment() {
+    lateinit var remoteViewModel: RemoteViewModel
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
     private var buttonDTOList: MutableList<ButtonDTO> = ArrayList()
 
-    val remoteViewModel: RemoteViewModel by lazy {
-        ViewModelProvider(this)[RemoteViewModel::class.java]
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,24 +52,27 @@ class RemoteFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        remoteViewModel = ViewModelProvider(requireActivity()).get(RemoteViewModel::class.java)
         // Inflate the layout for this fragment
         var layout =  inflater.inflate(R.layout.fragment_remote, container, false)
+
 
         var remote = remoteViewModel.getSelectedRemote().value
         Log.d("AAA","remote-${remote.toString()}")
 
-//        if( remote != null){
-//
-//
-//        }
-//        else{
-//            Log.d("AAA","Remote Not Exist")
-//        }
+        var jsonString = remote?.buttons
 
-        var jsonString = remote!!.buttons
-        Log.d("AAA", jsonString)
-        var jsonObject = JSONObject(jsonString)
-        var jsonArray = jsonObject.getJSONArray("buttons")
+        if( remote != null){
+
+        }
+        else{
+            Log.d("AAA","Remote Not Exist")
+        }
+
+        val jsonArray = JSONArray(jsonString)
+        Log.d("AAA", jsonString.toString())
+//        var jsonObject = JSONObject(jsonString)
+//        var jsonArray = jsonObject.getJSONArray("buttons")
         // convert to buttonDTO
 
         for (i in 1..jsonArray.length()) {
@@ -147,6 +150,8 @@ class RemoteFragment : Fragment() {
 
         return layout
     }
+
+
 
     fun findCommandByText(text: String, buttonList: List<ButtonDTO>): String {
         var result = "";

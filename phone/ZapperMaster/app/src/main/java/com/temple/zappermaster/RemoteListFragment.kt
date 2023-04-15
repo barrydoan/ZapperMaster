@@ -1,7 +1,6 @@
 package com.temple.zappermaster
 
-import android.content.Context
-import android.content.res.AssetManager
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -31,15 +30,7 @@ class RemoteListFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_remotelist, container, false)
     }
 
-    fun getRemoteFile(filename: String, context: Context): String {
-        var manager : AssetManager = context.assets
-        var file = manager.open(filename)
-        var bytes = ByteArray(file.available())
-        file.read(bytes)
-        file.close()
-        return String(bytes)
-    }
-
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(view as RecyclerView) {
@@ -55,11 +46,11 @@ class RemoteListFragment : Fragment() {
                 remoteViewModel.setRemoteList(remoteList)
             }
             // click event
-            val clickEven = {remote:RemoteObj -> Unit
+            val clickEven: (RemoteObj) -> Unit = {remote:RemoteObj ->
                 remoteViewModel.setSelectedRemote(remote)
                 Log.d("AAA","set selected remote- $remote")
-                // notify the main that a book is selected
                 (requireActivity() as SelectionFragmentInterface).remoteSelected()
+                // notify the main that a book is selected
             }
             layoutManager = LinearLayoutManager(requireContext())
             adapter = RemoteAdapter(remoteList, clickEven)
@@ -82,7 +73,6 @@ class RemoteListFragment : Fragment() {
 
         inner class RemoteViewHolder(_view: View) : RecyclerView.ViewHolder(_view) {
             val titleTxt: TextView = _view.findViewById(R.id.textView)
-
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RemoteViewHolder {
@@ -96,7 +86,6 @@ class RemoteListFragment : Fragment() {
             val remote = remoteList.get(position)
             // update information with each book
             holder.titleTxt.text = remote.model_number
-
             // create even listener for book
             holder.itemView.setOnClickListener{clickEven(remote)}
         }
