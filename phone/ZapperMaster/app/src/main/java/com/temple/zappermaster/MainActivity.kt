@@ -13,14 +13,22 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
+import com.temple.zappermaster.database.AppDatabase
+import com.temple.zappermaster.database.RemoteConverter
+import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.nio.charset.StandardCharsets
 
-class MainActivity : AppCompatActivity(), IrInterface {
+const val DATABASE_NAME = "database-name"
+
+class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInterface, IrInterface {
 
     val remoteViewModel: RemoteViewModel by lazy {
         ViewModelProvider(this)[RemoteViewModel::class.java]
     }
+    private val remoteListFragment = RemoteListFragment()
+    private lateinit var db: AppDatabase
 
     /*
      * Notifications from UsbService will be received here.
@@ -74,7 +82,67 @@ class MainActivity : AppCompatActivity(), IrInterface {
         setContentView(R.layout.activity_main)
         mHandler = MyHandler(this)
 
+        // init database
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java, DATABASE_NAME
+        )
+            .allowMainThreadQueries()
+            .build()
+        //Load device 1
+        val remoteArray = ArrayList<RemoteObj>()
+        var jsonString = getRemoteFile("device1.json", this)
+        var jsonObject = JSONObject(jsonString)
+        var jsonModel = jsonObject.getString("model_number")
+        Log.d("AAA",jsonModel)
+        var jsonButtons = jsonObject.getString("buttons")
+        Log.d("AAA",jsonButtons)
+        var jsonShared = jsonObject.getBoolean("shared")
+        Log.d("AAA",jsonShared.toString())
+        //Add to database
+        var remoteObj1 = RemoteObj(jsonModel, jsonShared, jsonButtons)
+        updateremoteToDatabase(remoteObj1)
+        //Load device 2
+        var jsonString2 = getRemoteFile("device2.json", this)
+        var jsonObject2 = JSONObject(jsonString2)
+        var jsonModel2 = jsonObject2.getString("model_number")
+        Log.d("AAA",jsonModel2)
+        var jsonButtons2 = jsonObject2.getString("buttons")
+        Log.d("AAA",jsonButtons2)
+        var jsonShared2 = jsonObject2.getBoolean("shared")
+        Log.d("AAA",jsonShared2.toString())
+        //Add to database
+        var remoteObj2 = RemoteObj(jsonModel2,jsonShared2,jsonButtons2)
+        updateremoteToDatabase(remoteObj2)
+        //Load device 3
+        var jsonString3 = getRemoteFile("device3.json", this)
+        var jsonObject3 = JSONObject(jsonString3)
+        var jsonModel3 = jsonObject3.getString("model_number")
+        Log.d("AAA",jsonModel3)
+        var jsonButtons3 = jsonObject3.getString("buttons")
+        Log.d("AAA",jsonButtons3)
+        var jsonShared3 = jsonObject3.getBoolean("shared")
+        Log.d("AAA",jsonShared3.toString())
+        //Add to database
+        var remoteObj3 = RemoteObj(jsonModel3,jsonShared3,jsonButtons3)
+        updateremoteToDatabase(remoteObj3)
 
+        var remoteList =remoteViewModel.getRemoteList().value
+        if(remoteList== null){
+            remoteList = RemoteList()
+        }
+        Log.d("AAA", "Write remote list to database")
+        // update view model
+        var remoteListDao = db.remoteDao().getAll()
+        var remoteConverter = RemoteConverter()
+        var remoteObjList = remoteConverter.toObjList(remoteListDao)
+        remoteArray.addAll(remoteObjList)
+        Log.d("AAA", "Remote Array - $remoteArray")
+
+        remoteList.addAll(remoteArray)
+        remoteViewModel.setRemoteList(remoteList)
+        remoteViewModel.setSelectedRemote(null)
+        Log.d("AAA","RemoteListMain-${remoteViewModel.getRemoteList()}")
 
     }
 
@@ -97,7 +165,7 @@ class MainActivity : AppCompatActivity(), IrInterface {
             R.id.remote -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container_view,RemoteFragment.newInstance("",""))
+                    .replace(R.id.fragment_container_view,RemoteListFragment())
                     .commit()
                 true
             }
@@ -199,11 +267,81 @@ class MainActivity : AppCompatActivity(), IrInterface {
         }
     }
 
-
-
     override fun sendIrCode(code: String) {
         if (usbService != null) { // if UsbService was correctly binded, Send data
             usbService!!.write(code.toByteArray(StandardCharsets.UTF_8))
         }
+    }
+
+    private fun updateremoteToDatabase(remote: RemoteObj){
+        var remoteConverter = RemoteConverter()
+        val remoteDao = remoteConverter.toDao(remote)
+        db.remoteDao().insert(remoteDao)
+    }
+
+//    private fun updateRemoteListToDatabase(bookArray: ArrayList<RemoteObj>) {
+//        // delete the book list first
+//        db.remoteDao().deleteAll()
+//        // store list to database
+//        val bookDaoList = RemoteConverter().toDaoList(bookArray)
+//        db.remoteDao().insertAll(bookDaoList)
+//    }
+//    override fun onRestart() {
+//        super.onRestart()
+//        // restart the app
+//        Log.d("AAA", "App is restarted")
+//        if (remoteViewModel.getSelectedRemote().value != null) {
+//            loadSelectedRemote(remoteViewModel.get.value)
+//        }
+//
+//    }
+
+    private fun loadSelectedRemote(name: String) {
+        val remote = db.remoteDao().loadAllByModel(name);
+        val usingRemote = RemoteConverter().toObj(remote)
+        remoteViewModel.setSelectedRemote(usingRemote)
+    }
+
+//    override fun onNewIntent(intent: Intent?) {
+//        super.onNewIntent(intent)
+//        val remoteArray = ArrayList<RemoteObj>()
+//        var jsonString = getRemoteFile("device1.json", this)
+//        for (i in jsonString.indices) {
+//            val remote = Klaxon().parse<RemoteObj>(jsonString)
+//            remote?.run {
+//                remoteArray.add(remote)
+//            }
+//
+//        }
+//        var remoteList =remoteViewModel.getRemoteList().value
+//        if(remoteList== null){
+//            remoteList = RemoteList()
+//        }
+//        remoteList.addAll(remoteArray)
+//        remoteViewModel.setRemoteList(remoteList)
+//        remoteViewModel.setSelectedRemote(null)
+//        Log.d("AAA", "Write remote list to database");
+//        updateRemoteListToDatabase(remoteArray)
+//
+//    }
+    fun getRemoteFile(filename: String, context: Context): String {
+        var manager : AssetManager = context.assets
+        var file = manager.open(filename)
+        var bytes = ByteArray(file.available())
+        file.read(bytes)
+        file.close()
+        return String(bytes)
+    }
+
+    override fun remoteSelected() {
+
+        val selectedBook = remoteViewModel.getSelectedRemote().value
+        if (selectedBook != null) {
+            Log.d("AAA","atMain-${selectedBook.buttons}")
+        }
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container_view, RemoteFragment())
+            .commit()
     }
 }

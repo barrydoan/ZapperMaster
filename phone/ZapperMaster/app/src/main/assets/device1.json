@@ -1,4 +1,6 @@
 {
+  "model_number": "device1",
+  "shared": false,
   "buttons": [
     {
       "background_color": "white",
@@ -128,6 +130,5 @@
       "display_name": "ChannelDown",
       "code": "<23|64|74|15>"
     }
-
   ]
 }

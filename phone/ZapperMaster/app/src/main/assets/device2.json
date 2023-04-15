@@ -1,0 +1,17 @@
+
+{
+  "model_number": "device2",
+  "shared": false,
+  "buttons": [
+
+    {
+      "background_color": "white",
+      "size": "normal",
+      "top_position_percent": 0.05,
+      "left_position_percent": 0.75,
+      "display_name": "Off",
+      "code": "<23|44|57|15>"
+    }
+
+  ]
+}
