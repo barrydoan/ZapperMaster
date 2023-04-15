@@ -19,7 +19,7 @@ class RemoteListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // init view model
-        remoteViewModel = ViewModelProvider(requireActivity()).get(RemoteViewModel::class.java)
+        remoteViewModel = ViewModelProvider(requireActivity())[RemoteViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -45,8 +45,9 @@ class RemoteListFragment : Fragment() {
                 remoteList = RemoteList()
                 remoteViewModel.setRemoteList(remoteList)
             }
+            Log.d("AAA","RemoteListFrag-$remoteList")
             // click event
-            val clickEven: (RemoteObj) -> Unit = {remote:RemoteObj ->
+            val clickEven= {remote:RemoteObj -> Unit
                 remoteViewModel.setSelectedRemote(remote)
                 Log.d("AAA","set selected remote- $remote")
                 (requireActivity() as SelectionFragmentInterface).remoteSelected()
@@ -61,10 +62,7 @@ class RemoteListFragment : Fragment() {
                 Log.d("AAA", "Remote list change")
                 this.adapter?.notifyDataSetChanged()
             }
-
         }
-
-
     }
 
     class RemoteAdapter(_remoteList: RemoteList, _clickEvent: (remote:RemoteObj)->Unit): RecyclerView.Adapter<RemoteAdapter.RemoteViewHolder>() {
@@ -83,7 +81,7 @@ class RemoteListFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: RemoteViewHolder, position: Int) {
-            val remote = remoteList.get(position)
+            val remote = remoteList[position]
             // update information with each book
             holder.titleTxt.text = remote.model_number
             // create even listener for book
