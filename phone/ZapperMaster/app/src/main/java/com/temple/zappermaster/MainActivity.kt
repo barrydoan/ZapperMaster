@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         ViewModelProvider(this)[RemoteViewModel::class.java]
     }
     private val remoteListFragment = RemoteListFragment()
+    private val editorFragment = EditorFragment()
     private lateinit var db: AppDatabase
 
     /*
@@ -165,7 +166,14 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
             R.id.remote -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container_view,RemoteListFragment())
+                    .replace(R.id.fragment_container_view,remoteListFragment)
+                    .commit()
+                true
+            }
+            R.id.design_remote->{
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_view,editorFragment)
                     .commit()
                 true
             }
