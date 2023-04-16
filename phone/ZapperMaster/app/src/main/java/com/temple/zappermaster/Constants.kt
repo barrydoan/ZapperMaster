@@ -11,5 +11,11 @@ class Constants {
         const val ICON_CHANNEL_UP = "ChannelUp"
         const val ICON_VOL_DOWN = "VolDown"
         const val ICON_CHANNEL_DOWN = "ChannelDown"
+
+        const val REMOTE_MODEL_NUMBER = "model_number"
+        const val REMOTE_BUTTONS = "buttons"
+        const val REMOTE_SHARED = "shared"
+        const val REMOTE_TYPE = "type"
+        const val REMOTE_MANUFACTURE = "manufacture"
     }
 }

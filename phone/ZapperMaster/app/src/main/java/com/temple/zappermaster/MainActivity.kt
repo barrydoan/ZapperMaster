@@ -90,61 +90,43 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         )
             .allowMainThreadQueries()
             .build()
-        //Load device 1
-        val remoteArray = ArrayList<RemoteObj>()
-        var jsonString = getRemoteFile("device1.json", this)
-        var jsonObject = JSONObject(jsonString)
-        var jsonModel = jsonObject.getString("model_number")
-        Log.d("AAA",jsonModel)
-        var jsonButtons = jsonObject.getString("buttons")
-        Log.d("AAA",jsonButtons)
-        var jsonShared = jsonObject.getBoolean("shared")
-        Log.d("AAA",jsonShared.toString())
-        //Add to database
-        var remoteObj1 = RemoteObj(jsonModel, jsonShared, jsonButtons)
-        updateremoteToDatabase(remoteObj1)
-        //Load device 2
-        var jsonString2 = getRemoteFile("device2.json", this)
-        var jsonObject2 = JSONObject(jsonString2)
-        var jsonModel2 = jsonObject2.getString("model_number")
-        Log.d("AAA",jsonModel2)
-        var jsonButtons2 = jsonObject2.getString("buttons")
-        Log.d("AAA",jsonButtons2)
-        var jsonShared2 = jsonObject2.getBoolean("shared")
-        Log.d("AAA",jsonShared2.toString())
-        //Add to database
-        var remoteObj2 = RemoteObj(jsonModel2,jsonShared2,jsonButtons2)
-        updateremoteToDatabase(remoteObj2)
-        //Load device 3
-        var jsonString3 = getRemoteFile("device3.json", this)
-        var jsonObject3 = JSONObject(jsonString3)
-        var jsonModel3 = jsonObject3.getString("model_number")
-        Log.d("AAA",jsonModel3)
-        var jsonButtons3 = jsonObject3.getString("buttons")
-        Log.d("AAA",jsonButtons3)
-        var jsonShared3 = jsonObject3.getBoolean("shared")
-        Log.d("AAA",jsonShared3.toString())
-        //Add to database
-        var remoteObj3 = RemoteObj(jsonModel3,jsonShared3,jsonButtons3)
-        updateremoteToDatabase(remoteObj3)
-
+        // load remote to data base
+        loadRemoteList()
         var remoteList =remoteViewModel.getRemoteList().value
         if(remoteList== null){
             remoteList = RemoteList()
         }
-        Log.d("AAA", "Write remote list to database")
+
         // update view model
         var remoteListDao = db.remoteDao().getAll()
         var remoteConverter = RemoteConverter()
         var remoteObjList = remoteConverter.toObjList(remoteListDao)
-        remoteArray.addAll(remoteObjList)
-        Log.d("AAA", "Remote Array - $remoteArray")
+        Log.d("AAA", "Remote Array - $remoteObjList")
 
-        remoteList.addAll(remoteArray)
+        remoteList.addAll(remoteObjList)
         remoteViewModel.setRemoteList(remoteList)
         remoteViewModel.setSelectedRemote(null)
         Log.d("AAA","RemoteListMain-${remoteViewModel.getRemoteList()}")
 
+    }
+
+    private fun loadRemoteList(){
+        //Load device 1
+        var remoteObj = loadRemote("device1.json")
+        updateremoteToDatabase(remoteObj)
+        remoteObj = loadRemote("device2.json")
+        updateremoteToDatabase(remoteObj)
+        remoteObj = loadRemote("device3.json")
+        updateremoteToDatabase(remoteObj)
+    }
+
+    private fun loadRemote(filename: String): RemoteObj {
+        var jsonString = getRemoteFile(filename, this)
+        var jsonObject = JSONObject(jsonString)
+        var model = jsonObject.getString(Constants.REMOTE_MODEL_NUMBER)
+        var buttons = jsonObject.getString(Constants.REMOTE_BUTTONS)
+        var shared = jsonObject.getBoolean(Constants.REMOTE_SHARED)
+        return RemoteObj(model, shared, buttons)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

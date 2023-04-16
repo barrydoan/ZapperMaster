@@ -1,6 +1,6 @@
 
 {
-  "model_number": "device2",
+  "model_number": "RMT-CCS15iP_2",
   "shared": false,
   "buttons": [
 
@@ -12,6 +12,7 @@
       "display_name": "Off",
       "code": "<23|44|57|15>"
     }
-
-  ]
+  ],
+  "type": "Speaker",
+  "manufacture": "Sony"
 }
