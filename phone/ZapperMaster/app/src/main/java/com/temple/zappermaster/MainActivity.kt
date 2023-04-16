@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.temple.zappermaster.database.AppDatabase
 import com.temple.zappermaster.database.RemoteConverter
 import org.json.JSONObject
@@ -22,7 +24,8 @@ import java.nio.charset.StandardCharsets
 
 const val DATABASE_NAME = "database-name"
 
-class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInterface, IrInterface {
+class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentInterface,
+    IrInterface {
 
     val remoteViewModel: RemoteViewModel by lazy {
         ViewModelProvider(this)[RemoteViewModel::class.java]
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
     private val remoteListFragment = RemoteListFragment()
     private val editorFragment = EditorFragment()
     private lateinit var db: AppDatabase
+    private lateinit var tabLayout: TabLayout
 
     /*
      * Notifications from UsbService will be received here.
@@ -92,8 +96,49 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
             .build()
         // load remote to data base
         loadRemoteList()
-        var remoteList =remoteViewModel.getRemoteList().value
-        if(remoteList== null){
+        loadRemoteListFromLocalDatabase()
+
+        tabLayout = findViewById(R.id.tabLayout)
+        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                Log.d("AAA", "onTabSelected")
+                // show local remote list
+                if (tab?.text == resources.getString(R.string.tab_local)) {
+                    loadRemoteListFromLocalDatabase()
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragment_container_view, remoteListFragment)
+                        .commit()
+                } else if (tab?.text == resources.getString(R.string.tab_server)) {
+                    loadRemoteListFromApi()
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragment_container_view, remoteListFragment)
+                        .commit()
+
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                Log.d("AAA", "onTabUnselected")
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                Log.d("AAA", "onTabReselected")
+            }
+        })
+        // load remote list fragment
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container_view, remoteListFragment)
+            .commit()
+
+
+    }
+
+    private fun loadRemoteListFromLocalDatabase() {
+        var remoteList = remoteViewModel.getRemoteList().value
+        if (remoteList == null) {
             remoteList = RemoteList()
         }
 
@@ -106,11 +151,43 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         remoteList.addAll(remoteObjList)
         remoteViewModel.setRemoteList(remoteList)
         remoteViewModel.setSelectedRemote(null)
-        Log.d("AAA","RemoteListMain-${remoteViewModel.getRemoteList()}")
-
     }
 
-    private fun loadRemoteList(){
+    private fun loadRemoteListFromApi() {
+        Helper.api.getRemoteList(this, "", object : Helper.api.Response {
+            override fun processResponse(response: JSONObject) {
+                Log.d("AAA", response.toString())
+                // extract
+                var remoteListJson = response.getJSONArray("results")
+                var remoteObjList = ArrayList<RemoteObj>()
+                if (remoteListJson.length() > 0) {
+                    for (i in 1..remoteListJson.length()) {
+                        var remoteJson = remoteListJson.getJSONObject(i - 1)
+                        var remoteObj = RemoteObj(
+                            remoteJson.getString(Constants.REMOTE_MODEL_NUMBER),
+                            remoteJson.getBoolean(Constants.REMOTE_SHARED),
+                            remoteJson.getString(Constants.REMOTE_BUTTONS),
+                            "TV",
+                            "Samsung"
+                        )
+                        remoteObjList.add(remoteObj)
+                    }
+                }
+                // set remote list to view model
+
+                var remoteList = remoteViewModel.getRemoteList().value
+                if (remoteList == null) {
+                    remoteList = RemoteList()
+                }
+                remoteList.removeAll()
+                remoteList.addAll(remoteObjList)
+                remoteViewModel.setRemoteList(remoteList)
+                remoteViewModel.setSelectedRemote(null)
+            }
+        })
+    }
+
+    private fun loadRemoteList() {
         //Load device 1
         var remoteObj = loadRemote("device1.json")
         updateremoteToDatabase(remoteObj)
@@ -126,7 +203,9 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         var model = jsonObject.getString(Constants.REMOTE_MODEL_NUMBER)
         var buttons = jsonObject.getString(Constants.REMOTE_BUTTONS)
         var shared = jsonObject.getBoolean(Constants.REMOTE_SHARED)
-        return RemoteObj(model, shared, buttons)
+        var type = jsonObject.getString(Constants.REMOTE_TYPE)
+        var manufacture = jsonObject.getString(Constants.REMOTE_MANUFACTURE)
+        return RemoteObj(model, shared, buttons, type, manufacture)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -148,14 +227,14 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
             R.id.remote -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container_view,remoteListFragment)
+                    .replace(R.id.fragment_container_view, remoteListFragment)
                     .commit()
                 true
             }
-            R.id.design_remote->{
+            R.id.design_remote -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container_view,editorFragment)
+                    .replace(R.id.fragment_container_view, editorFragment)
                     .commit()
                 true
             }
@@ -231,12 +310,10 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
                         Log.d("AAA", "Start")
                         command = java.lang.StringBuilder()
                         command.append(data)
-                    }
-                    else if (!data.contains(']')) {
+                    } else if (!data.contains(']')) {
                         Log.d("AAA", "Middle")
                         command.append(data)
-                    }
-                    else {
+                    } else {
                         Log.d("AAA", "End")
                         command.append(data)
                         mActivity.get()!!.remoteViewModel.setLastIrCode(command.toString())
@@ -263,7 +340,7 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         }
     }
 
-    private fun updateremoteToDatabase(remote: RemoteObj){
+    private fun updateremoteToDatabase(remote: RemoteObj) {
         var remoteConverter = RemoteConverter()
         val remoteDao = remoteConverter.toDao(remote)
         db.remoteDao().insert(remoteDao)
@@ -292,7 +369,7 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
         remoteViewModel.setSelectedRemote(usingRemote)
     }
 
-//    override fun onNewIntent(intent: Intent?) {
+    //    override fun onNewIntent(intent: Intent?) {
 //        super.onNewIntent(intent)
 //        val remoteArray = ArrayList<RemoteObj>()
 //        var jsonString = getRemoteFile("device1.json", this)
@@ -315,7 +392,7 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
 //
 //    }
     fun getRemoteFile(filename: String, context: Context): String {
-        var manager : AssetManager = context.assets
+        var manager: AssetManager = context.assets
         var file = manager.open(filename)
         var bytes = ByteArray(file.available())
         file.read(bytes)
@@ -327,7 +404,7 @@ class MainActivity : AppCompatActivity(),RemoteListFragment.SelectionFragmentInt
 
         val selectedBook = remoteViewModel.getSelectedRemote().value
         if (selectedBook != null) {
-            Log.d("AAA","atMain-${selectedBook.buttons}")
+            Log.d("AAA", "atMain-${selectedBook.buttons}")
         }
         supportFragmentManager
             .beginTransaction()

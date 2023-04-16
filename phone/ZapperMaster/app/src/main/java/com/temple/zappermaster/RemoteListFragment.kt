@@ -71,6 +71,7 @@ class RemoteListFragment : Fragment() {
 
         inner class RemoteViewHolder(_view: View) : RecyclerView.ViewHolder(_view) {
             val titleTxt: TextView = _view.findViewById(R.id.textView)
+            val typeTxt: TextView = _view.findViewById(R.id.type)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RemoteViewHolder {
@@ -84,7 +85,8 @@ class RemoteListFragment : Fragment() {
             val remote = remoteList[position]
             // update information with each book
             holder.titleTxt.text = remote.model_number
-            // create even listener for book
+            holder.typeTxt.text = remote.type
+
             holder.itemView.setOnClickListener{clickEven(remote)}
         }
 
