@@ -1,6 +1,6 @@
 
 {
-  "model_number": "device3",
+  "model_number": "RMT-CCS15iP_3",
   "shared": false,
   "buttons": [
     {
@@ -59,6 +59,7 @@
       "display_name": "ChannelDown",
       "code": "<23|64|74|15>"
     }
-
-  ]
+  ],
+  "type": "Speaker",
+  "manufacture": "Sony"
 }
