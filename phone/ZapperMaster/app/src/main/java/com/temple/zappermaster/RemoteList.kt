@@ -15,6 +15,10 @@ class RemoteList {
         remotes.remove(book)
     }
 
+    fun removeAll() {
+        remotes = ArrayList()
+    }
+
     operator fun get(index: Int): RemoteObj {
         return remotes[index];
     }
