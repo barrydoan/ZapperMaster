@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/newRemote"
+        android:title="New remote" />
     <item android:id="@+id/test"
         android:title="Test device" />
     <item android:id="@+id/remote"

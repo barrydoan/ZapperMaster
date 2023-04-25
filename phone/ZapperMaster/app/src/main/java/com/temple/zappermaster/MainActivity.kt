@@ -238,6 +238,13 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
                     .commit()
                 true
             }
+            R.id.newRemote -> {
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container_view, NewRemoteFragment.newInstance("", ""))
+                    .commit()
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }
