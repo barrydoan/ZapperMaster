@@ -2,7 +2,9 @@ package com.temple.zappermaster
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -12,6 +14,7 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.ViewModelProvider
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -31,12 +34,14 @@ class NewRemoteFragment : Fragment() {
     private var txtName:TextView? = null
     private var txtCode:TextView? = null
     private var btnAdd:Button? = null
+    private var btnDelete:Button? = null
+    private var btnSave:Button? = null
     private var editorLayout:RelativeLayout? = null
-    private var buttonList:MutableList<Button> = ArrayList()
+    private var buttonList:MutableList<ButtonExtended> = ArrayList()
     private var width:Int? = null
     private var height:Int? = null
 
-    private var selectedButton:Button? = null
+    private var selectedButton:ButtonExtended? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +61,8 @@ class NewRemoteFragment : Fragment() {
         txtName = layout.findViewById(R.id.txtButtonName)
         txtCode = layout.findViewById(R.id.txtButtonCode)
         btnAdd = layout.findViewById(R.id.btnAdd)
+        btnDelete = layout.findViewById(R.id.btnDelete)
+        btnSave = layout.findViewById(R.id.btnSave)
         editorLayout = layout.findViewById(R.id.editorLayout)
         return layout
     }
@@ -72,12 +79,33 @@ class NewRemoteFragment : Fragment() {
             }
         }
 
+        btnDelete?.setOnClickListener {
+            if (selectedButton != null) {
+                buttonList.remove(selectedButton)
+                editorLayout!!.removeView(selectedButton)
+            }
+        }
+
+        ViewModelProvider(requireActivity())[RemoteViewModel::class.java].getLastIrCode().observe(requireActivity()) {
+            if (selectedButton != null) {
+                selectedButton?.code = it
+                txtCode?.text = it
+            }
+        }
+
+        btnSave?.setOnClickListener {
+
+        }
+
         btnAdd?.setOnClickListener {
-            var button = Button(requireContext())
+            var button = ButtonExtended(requireContext())
             button.text = "New button"
             button.setOnTouchListener { button, event ->
-                selectedButton = (button as Button)
-                txtName?.text = (button as Button).text
+                resetBackgroundColorForButtonList()
+                selectedButton = (button as ButtonExtended)
+                selectedButton!!.setBackgroundColor(Color.BLUE)
+                txtName?.text = selectedButton!!.text
+                txtCode?.text = selectedButton!!.code
                 if (event?.action == MotionEvent.ACTION_MOVE) {
                     val layoutParam = RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -85,7 +113,10 @@ class NewRemoteFragment : Fragment() {
                     )
                     layoutParam.leftMargin = event.rawX.toInt() - (button!!.width / 2);
                     layoutParam.topMargin = event.rawY.toInt() - (button!!.height / 2) - 400
-                    button.layoutParams = layoutParam
+                    if (layoutParam.leftMargin > 0 && layoutParam.leftMargin < width!!
+                        && layoutParam.topMargin > 0 && layoutParam.topMargin < height!!) {
+                        button.layoutParams = layoutParam
+                    }
                 }
                 true
             }
@@ -96,7 +127,18 @@ class NewRemoteFragment : Fragment() {
             layoutParam.leftMargin = (width!! / 2).toInt() - 100
             layoutParam.topMargin = (height!! / 2).toInt()
             button.layoutParams = layoutParam
+            // update location to buttonextended
+            button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
+            button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())
+
             editorLayout?.addView(button)
+            buttonList.add(button)
+        }
+    }
+
+    fun resetBackgroundColorForButtonList() {
+        for (button in buttonList) {
+            button.setBackgroundColor(Color.GRAY)
         }
     }
 
