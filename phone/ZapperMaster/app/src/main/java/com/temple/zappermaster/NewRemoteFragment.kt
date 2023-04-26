@@ -93,6 +93,10 @@ class NewRemoteFragment : Fragment() {
             }
         }
 
+        btnSave?.setOnClickListener {
+
+        }
+
         btnAdd?.setOnClickListener {
             var button = ButtonExtended(requireContext())
             button.text = "New button"

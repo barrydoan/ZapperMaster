@@ -17,6 +17,7 @@ import androidx.room.Room
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.temple.zappermaster.database.AppDatabase
+import com.temple.zappermaster.database.Remote
 import com.temple.zappermaster.database.RemoteConverter
 import org.json.JSONObject
 import java.lang.ref.WeakReference
@@ -25,7 +26,7 @@ import java.nio.charset.StandardCharsets
 const val DATABASE_NAME = "database-name"
 
 class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentInterface,
-    IrInterface {
+    IrInterface, DbInterface {
 
     val remoteViewModel: RemoteViewModel by lazy {
         ViewModelProvider(this)[RemoteViewModel::class.java]
@@ -347,28 +348,24 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         }
     }
 
-    private fun updateremoteToDatabase(remote: RemoteObj) {
+    private fun updateremoteToDatabase(remoteDto: RemoteObj) {
         var remoteConverter = RemoteConverter()
-        val remoteDao = remoteConverter.toDao(remote)
-        db.remoteDao().insert(remoteDao)
+        val remote = remoteConverter.toDao(remoteDto)
+        db.remoteDao().insert(remote)
+
     }
 
-//    private fun updateRemoteListToDatabase(bookArray: ArrayList<RemoteObj>) {
-//        // delete the book list first
-//        db.remoteDao().deleteAll()
-//        // store list to database
-//        val bookDaoList = RemoteConverter().toDaoList(bookArray)
-//        db.remoteDao().insertAll(bookDaoList)
-//    }
-//    override fun onRestart() {
-//        super.onRestart()
-//        // restart the app
-//        Log.d("AAA", "App is restarted")
-//        if (remoteViewModel.getSelectedRemote().value != null) {
-//            loadSelectedRemote(remoteViewModel.get.value)
-//        }
-//
-//    }
+    override fun saveRemote(
+        name: String,
+        type: String,
+        manufacture: String,
+        buttonExtendedList: MutableList<ButtonExtended>
+    ) {
+        // convert button array to string
+
+        var remote: Remote = Remote(name, false, "", false, type, manufacture)
+    }
+
 
     private fun loadSelectedRemote(name: String) {
         val remote = db.remoteDao().loadAllByModel(name);
@@ -376,28 +373,6 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         remoteViewModel.setSelectedRemote(usingRemote)
     }
 
-    //    override fun onNewIntent(intent: Intent?) {
-//        super.onNewIntent(intent)
-//        val remoteArray = ArrayList<RemoteObj>()
-//        var jsonString = getRemoteFile("device1.json", this)
-//        for (i in jsonString.indices) {
-//            val remote = Klaxon().parse<RemoteObj>(jsonString)
-//            remote?.run {
-//                remoteArray.add(remote)
-//            }
-//
-//        }
-//        var remoteList =remoteViewModel.getRemoteList().value
-//        if(remoteList== null){
-//            remoteList = RemoteList()
-//        }
-//        remoteList.addAll(remoteArray)
-//        remoteViewModel.setRemoteList(remoteList)
-//        remoteViewModel.setSelectedRemote(null)
-//        Log.d("AAA", "Write remote list to database");
-//        updateRemoteListToDatabase(remoteArray)
-//
-//    }
     fun getRemoteFile(filename: String, context: Context): String {
         var manager: AssetManager = context.assets
         var file = manager.open(filename)
@@ -418,4 +393,5 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
             .replace(R.id.fragment_container_view, RemoteFragment())
             .commit()
     }
+
 }
