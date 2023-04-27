@@ -376,7 +376,7 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
             jObject.put("top_position_percent",buttonExtendedList[i].topPositionPercent)
             jObject.put("left_position_percent",buttonExtendedList[i].leftPositionPercent)
             jObject.put("display_name",buttonExtendedList[i].text.toString())
-            jObject.put("code","<23|64|6F|15>")
+            jObject.put("code",buttonExtendedList[i].code)
 
 //            var buttonObj = ButtonObj("white",
 //                "normal",
