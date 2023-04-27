@@ -97,11 +97,13 @@ class NewRemoteFragment : Fragment() {
         }
 
         btnSave?.setOnClickListener {
-
             (activity as DbInterface).saveRemote("test2","Tv","sony",false,buttonList)
+
+
         }
         btnConfirm?.setOnClickListener{
             var button = ButtonExtended(requireContext())
+
 
         }
 
@@ -109,6 +111,7 @@ class NewRemoteFragment : Fragment() {
         btnAdd?.setOnClickListener {
             var button = ButtonExtended(requireContext())
             button.text = "New button"
+
             button.setOnTouchListener { button, event ->
                 resetBackgroundColorForButtonList()
                 selectedButton = (button as ButtonExtended)
@@ -120,12 +123,15 @@ class NewRemoteFragment : Fragment() {
                         RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT
                     )
-                    layoutParam.leftMargin = event.rawX.toInt() - (button!!.width / 2);
+                    layoutParam.leftMargin = event.rawX.toInt() - (button!!.width / 2)
                     layoutParam.topMargin = event.rawY.toInt() - (button!!.height / 2) - 400
                     if (layoutParam.leftMargin > 0 && layoutParam.leftMargin < width!!
                         && layoutParam.topMargin > 0 && layoutParam.topMargin < height!!) {
                         button.layoutParams = layoutParam
                     }
+
+                    // hy- put here can take  final position but wrong ratio.
+
                 }
                 true
             }
@@ -137,15 +143,17 @@ class NewRemoteFragment : Fragment() {
             layoutParam.topMargin = (height!! / 2).toInt()
             button.layoutParams = layoutParam
             // update location to buttonextended
+            // Hy - this code just take initial position
             button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
             button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())
+            Log.d("AAA","Button List ${button.topPositionPercent} ${button.leftPositionPercent}")
 
-            ViewModelProvider(requireActivity())[RemoteViewModel::class.java].getLastIrCode().observe(requireActivity()){
-                button.code = remoteViewModel.getLastIrCode().value.toString()
-            }
+//            ViewModelProvider(requireActivity())[RemoteViewModel::class.java].getLastIrCode().observe(requireActivity()){
+//                button.code = remoteViewModel.getLastIrCode().value.toString()
+//            }
             editorLayout?.addView(button)
             buttonList.add(button)
-            Log.d("AAA","Button List ${button.topPositionPercent} ${button.leftPositionPercent}")
+
         }
     }
 

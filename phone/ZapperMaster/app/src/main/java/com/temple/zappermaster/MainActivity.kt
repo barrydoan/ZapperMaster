@@ -365,18 +365,23 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         shared: Boolean,
         buttonExtendedList: MutableList<ButtonExtended>
     ) {
+        buttonExtendedList
+        for( i in buttonExtendedList.indices){
+            Log.d("AAA","Button List: ${buttonExtendedList.get(i).text}")
+        }
 
         Log.d("AAA","save remote called")
-        var jObject = JSONObject()
+
         var jArray = JSONArray()
         var outputJsonObject = JSONObject()
-        for(i in buttonExtendedList.indices){
+        buttonExtendedList.forEach { item ->
+            var jObject = JSONObject()
             jObject.put("background_color","white")
             jObject.put("size","normal")
-            jObject.put("top_position_percent",buttonExtendedList[i].topPositionPercent)
-            jObject.put("left_position_percent",buttonExtendedList[i].leftPositionPercent)
-            jObject.put("display_name",buttonExtendedList[i].text.toString())
-            jObject.put("code",buttonExtendedList[i].code)
+            jObject.put("top_position_percent",item.topPositionPercent)
+            jObject.put("left_position_percent",item.leftPositionPercent)
+            jObject.put("display_name",item.text.toString())
+            jObject.put("code",item.code)
 
 //            var buttonObj = ButtonObj("white",
 //                "normal",
@@ -385,9 +390,9 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
 //                "add",
 //                buttonExtendedList[i].code
 //            )
-
             Log.d("AAA","Json Object $jObject")
             jArray.put(jObject)
+
         }
 //        outputJsonObject.put("buttons",jArray.toString())
 //
