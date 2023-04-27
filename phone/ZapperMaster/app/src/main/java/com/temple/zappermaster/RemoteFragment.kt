@@ -61,6 +61,7 @@ class RemoteFragment : Fragment() {
         Log.d("AAA","remote-${remote.toString()}")
 
         var jsonString = remote?.buttons
+        Log.d("AAA","Json String in RemoteFragment $jsonString")
 
         if( remote != null){
 

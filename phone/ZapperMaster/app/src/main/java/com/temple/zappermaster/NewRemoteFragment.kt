@@ -5,7 +5,6 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -14,6 +13,7 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 
 // TODO: Rename parameter arguments, choose names that match
@@ -36,8 +36,10 @@ class NewRemoteFragment : Fragment() {
     private var btnAdd:Button? = null
     private var btnDelete:Button? = null
     private var btnSave:Button? = null
+    private var btnConfirm: Button? = null
     private var editorLayout:RelativeLayout? = null
     private var buttonList:MutableList<ButtonExtended> = ArrayList()
+    private lateinit var remoteViewModel: RemoteViewModel
     private var width:Int? = null
     private var height:Int? = null
 
@@ -63,6 +65,7 @@ class NewRemoteFragment : Fragment() {
         btnAdd = layout.findViewById(R.id.btnAdd)
         btnDelete = layout.findViewById(R.id.btnDelete)
         btnSave = layout.findViewById(R.id.btnSave)
+        btnConfirm = layout.findViewById(R.id.btnConfirm)
         editorLayout = layout.findViewById(R.id.editorLayout)
         return layout
     }
@@ -95,7 +98,13 @@ class NewRemoteFragment : Fragment() {
 
         btnSave?.setOnClickListener {
 
+            (activity as DbInterface).saveRemote("test2","Tv","sony",false,buttonList)
         }
+        btnConfirm?.setOnClickListener{
+            var button = ButtonExtended(requireContext())
+
+        }
+
 
         btnAdd?.setOnClickListener {
             var button = ButtonExtended(requireContext())
@@ -130,16 +139,16 @@ class NewRemoteFragment : Fragment() {
             // update location to buttonextended
             button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
             button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())
-
+            remoteViewModel.setTopPosition()
+//            button.code = remoteViewModel.getLastIrCode().value.toString()
             editorLayout?.addView(button)
             buttonList.add(button)
+            Log.d("AAA","Button List ${button.topPositionPercent} ${button.leftPositionPercent}")
         }
     }
 
     fun resetBackgroundColorForButtonList() {
-        for (button in buttonList) {
-            button.setBackgroundColor(Color.GRAY)
-        }
+
     }
 
     companion object {

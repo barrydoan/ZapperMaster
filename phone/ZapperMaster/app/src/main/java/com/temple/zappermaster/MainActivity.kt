@@ -19,6 +19,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.temple.zappermaster.database.AppDatabase
 import com.temple.zappermaster.database.Remote
 import com.temple.zappermaster.database.RemoteConverter
+import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.nio.charset.StandardCharsets
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
     private val editorFragment = EditorFragment()
     private lateinit var db: AppDatabase
     private lateinit var tabLayout: TabLayout
+    private lateinit var buttonObj: ButtonObj
 
     /*
      * Notifications from UsbService will be received here.
@@ -171,6 +173,7 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
                             "TV",
                             "Samsung"
                         )
+                        Log.d("AAA","remote obj $remoteObj")
                         remoteObjList.add(remoteObj)
                     }
                 }
@@ -359,11 +362,38 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         name: String,
         type: String,
         manufacture: String,
+        shared: Boolean,
         buttonExtendedList: MutableList<ButtonExtended>
     ) {
-        // convert button array to string
 
-        var remote: Remote = Remote(name, false, "", false, type, manufacture)
+        Log.d("AAA","save remote called")
+        var jObject = JSONObject()
+        var jArray = JSONArray()
+        var outputJsonObject = JSONObject()
+        for(i in buttonExtendedList.indices){
+            jObject.put("background_color","white")
+            jObject.put("size","normal")
+            jObject.put("top_position_percent",buttonExtendedList[i].topPositionPercent)
+            jObject.put("left_position_percent",buttonExtendedList[i].leftPositionPercent)
+            jObject.put("display_name","sony")
+            jObject.put("code","<23|64|6F|15>")
+
+//            var buttonObj = ButtonObj("white",
+//                "normal",
+//                buttonExtendedList[i].topPositionPercent,
+//                buttonExtendedList[i].leftPositionPercent,
+//                "add",
+//                buttonExtendedList[i].code
+//            )
+
+            Log.d("AAA","Json Object $jObject")
+            jArray.put(jObject)
+        }
+//        outputJsonObject.put("buttons",jArray.toString())
+//
+//        Log.d("AAA","string Remote at main $outputJsonObject")
+        var remote: Remote = Remote(name, shared, jArray.toString(), false, type, manufacture)
+        db.remoteDao().insert(remote)
     }
 
 
