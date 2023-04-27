@@ -16,25 +16,6 @@ class RemoteViewModel : ViewModel() {
     private val selectedRemote : MutableLiveData<RemoteObj?> by lazy {
         MutableLiveData<RemoteObj?>()
     }
-    private val lastTopPosition by lazy{
-        MutableLiveData<Double>()
-    }
-    private val lastLeftPosition by lazy {
-        MutableLiveData<Double>()
-    }
-    fun setTopPosition(double: Double){
-        lastTopPosition.value = double
-    }
-    fun setLeftPosition(double: Double){
-        lastLeftPosition.value = double
-    }
-    fun getTopPosition(): LiveData<Double>{
-        return lastTopPosition
-    }
-    fun getLeftPostion(): LiveData<Double>{
-        return lastLeftPosition
-    }
-
     fun setRemoteList(_remoteList: RemoteList){
         remoteList.value = _remoteList
     }

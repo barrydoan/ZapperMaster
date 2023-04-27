@@ -139,7 +139,8 @@ class NewRemoteFragment : Fragment() {
             // update location to buttonextended
             button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
             button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())
-            remoteViewModel.setTopPosition()
+//            button.displayName = button.text as String
+
 //            button.code = remoteViewModel.getLastIrCode().value.toString()
             editorLayout?.addView(button)
             buttonList.add(button)
