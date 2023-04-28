@@ -1,8 +1,6 @@
 package com.temple.zappermaster
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.AssetManager
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -88,20 +86,22 @@ class RemoteFragment : Fragment() {
             )
             buttonDTOList.add(buttonDTO)
         }
-
-        var buttonList: MutableList<Button> = ArrayList()
-
         var layout2 = layout.findViewById<View>(R.id.constraint_layout)
 
         var width = Resources.getSystem().displayMetrics.widthPixels
         var heigh = Resources.getSystem().displayMetrics.heightPixels
+
+
+
+        Log.d("AAA","created layout: width $width, height: $heigh")
 
         for (buttonDTO in buttonDTOList) {
             var button = MaterialButton(requireContext())
             button.width = 75
             button.height = 150
             button.cornerRadius = 50
-            button.iconSize = 75
+            button.iconSize = 100
+            button.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_TOP)
             button.backgroundTintList = ContextCompat.getColorStateList(requireContext(),R.color.ic_tint_color)
             Log.d("AAA: Button Name", buttonDTO.displayName)
 
@@ -126,7 +126,7 @@ class RemoteFragment : Fragment() {
             } else {
                 button.text = buttonDTO.displayName
             }
-            button.text = buttonDTO.displayName
+//            button.text = buttonDTO.displayName
 
 
             Log.d("AAA", "${button.width}")
@@ -135,7 +135,7 @@ class RemoteFragment : Fragment() {
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
             )
-            layoutParam.leftMargin = (buttonDTO.leftPositionPercent * width).toInt() - 100
+            layoutParam.leftMargin = (buttonDTO.leftPositionPercent * width).toInt()
             layoutParam.topMargin = (buttonDTO.topPositionPercent * heigh).toInt()
 
             button.layoutParams = layoutParam
@@ -164,17 +164,6 @@ class RemoteFragment : Fragment() {
         }
         return result;
     }
-
-
-    fun getRemoteFile(filename: String, context: Context): String {
-        var manager : AssetManager = context.assets
-        var file = manager.open(filename)
-        var bytes = ByteArray(file.available())
-        file.read(bytes)
-        file.close()
-        return String(bytes)
-    }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

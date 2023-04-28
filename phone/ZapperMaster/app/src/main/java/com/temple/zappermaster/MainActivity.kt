@@ -24,6 +24,7 @@ import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.nio.charset.StandardCharsets
 
+
 const val DATABASE_NAME = "database-name"
 
 class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentInterface,
@@ -365,15 +366,9 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         shared: Boolean,
         buttonExtendedList: MutableList<ButtonExtended>
     ) {
-        buttonExtendedList
-        for( i in buttonExtendedList.indices){
-            Log.d("AAA","Button List: ${buttonExtendedList.get(i).text}")
-        }
-
         Log.d("AAA","save remote called")
 
         var jArray = JSONArray()
-        var outputJsonObject = JSONObject()
         buttonExtendedList.forEach { item ->
             var jObject = JSONObject()
             jObject.put("background_color","white")
@@ -383,20 +378,11 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
             jObject.put("display_name",item.text.toString())
             jObject.put("code",item.code)
 
-//            var buttonObj = ButtonObj("white",
-//                "normal",
-//                buttonExtendedList[i].topPositionPercent,
-//                buttonExtendedList[i].leftPositionPercent,
-//                "add",
-//                buttonExtendedList[i].code
-//            )
+
             Log.d("AAA","Json Object $jObject")
             jArray.put(jObject)
 
         }
-//        outputJsonObject.put("buttons",jArray.toString())
-//
-//        Log.d("AAA","string Remote at main $outputJsonObject")
         var remote: Remote = Remote(name, shared, jArray.toString(), false, type, manufacture)
         db.remoteDao().insert(remote)
     }

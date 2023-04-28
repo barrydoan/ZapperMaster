@@ -36,7 +36,6 @@ class NewRemoteFragment : Fragment() {
     private var btnAdd:Button? = null
     private var btnDelete:Button? = null
     private var btnSave:Button? = null
-    private var btnConfirm: Button? = null
     private var editorLayout:RelativeLayout? = null
     private var buttonList:MutableList<ButtonExtended> = ArrayList()
     private lateinit var remoteViewModel: RemoteViewModel
@@ -65,7 +64,6 @@ class NewRemoteFragment : Fragment() {
         btnAdd = layout.findViewById(R.id.btnAdd)
         btnDelete = layout.findViewById(R.id.btnDelete)
         btnSave = layout.findViewById(R.id.btnSave)
-        btnConfirm = layout.findViewById(R.id.btnConfirm)
         editorLayout = layout.findViewById(R.id.editorLayout)
         return layout
     }
@@ -101,16 +99,14 @@ class NewRemoteFragment : Fragment() {
 
 
         }
-        btnConfirm?.setOnClickListener{
-            var button = ButtonExtended(requireContext())
-
-
-        }
-
 
         btnAdd?.setOnClickListener {
             var button = ButtonExtended(requireContext())
             button.text = "New button"
+            var layoutParam = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+            )
 
             button.setOnTouchListener { button, event ->
                 resetBackgroundColorForButtonList()
@@ -118,39 +114,28 @@ class NewRemoteFragment : Fragment() {
                 selectedButton!!.setBackgroundColor(Color.BLUE)
                 txtName?.text = selectedButton!!.text
                 txtCode?.text = selectedButton!!.code
+
                 if (event?.action == MotionEvent.ACTION_MOVE) {
-                    val layoutParam = RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    layoutParam.leftMargin = event.rawX.toInt() - (button!!.width / 2)
-                    layoutParam.topMargin = event.rawY.toInt() - (button!!.height / 2) - 400
+
+
+                    layoutParam.leftMargin = event.rawX.toInt() - (button.width / 2)
+                    layoutParam.topMargin = event.rawY.toInt() - (button.height / 2) - 400
                     if (layoutParam.leftMargin > 0 && layoutParam.leftMargin < width!!
                         && layoutParam.topMargin > 0 && layoutParam.topMargin < height!!) {
                         button.layoutParams = layoutParam
                     }
-
-                    // hy- put here can take  final position but wrong ratio.
+                    Log.d("AAA","Button save - left: ${button.leftPositionPercent}, top: ${button.topPositionPercent})")
 
                 }
+                // update location to buttonextended
+                button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
+                button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())
                 true
             }
-            var layoutParam = RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
-            )
+
             layoutParam.leftMargin = (width!! / 2).toInt() - 100
             layoutParam.topMargin = (height!! / 2).toInt()
             button.layoutParams = layoutParam
-            // update location to buttonextended
-            // Hy - this code just take initial position
-            button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
-            button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())
-            Log.d("AAA","Button List ${button.topPositionPercent} ${button.leftPositionPercent}")
-
-//            ViewModelProvider(requireActivity())[RemoteViewModel::class.java].getLastIrCode().observe(requireActivity()){
-//                button.code = remoteViewModel.getLastIrCode().value.toString()
-//            }
             editorLayout?.addView(button)
             buttonList.add(button)
 
