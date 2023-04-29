@@ -57,15 +57,16 @@ class RemoteFragment : Fragment() {
 
         var jsonString = remote?.buttons
         Log.d("AAA","Json String in RemoteFragment $jsonString")
+        var jsonArray = JSONArray()
 
         if( remote != null){
+            jsonArray = JSONArray(jsonString)
 
         }
         else{
             Log.d("AAA","Remote Not Exist")
         }
 
-        val jsonArray = JSONArray(jsonString)
         Log.d("AAA", jsonString.toString())
 
         for (i in 1..jsonArray.length()) {

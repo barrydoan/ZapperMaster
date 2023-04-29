@@ -12,6 +12,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -110,6 +111,7 @@ class NewRemoteFragment : Fragment() {
             val intent = Intent(context, MainActivity::class.java)
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             requireContext().startActivity(intent)
+
         }
 
         alert.show()
@@ -150,6 +152,7 @@ class NewRemoteFragment : Fragment() {
         btnAdd?.setOnClickListener {
             var button = ButtonExtended(requireContext())
             button.text = "New button"
+            button.background = AppCompatResources.getDrawable(requireContext(),R.color.mid_blue)
             var layoutParam = RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
@@ -163,8 +166,6 @@ class NewRemoteFragment : Fragment() {
                 txtCode?.text = selectedButton!!.code
 
                 if (event?.action == MotionEvent.ACTION_MOVE) {
-
-
                     layoutParam.leftMargin = event.rawX.toInt() - (button.width / 2)
                     layoutParam.topMargin = event.rawY.toInt() - (button.height / 2) - 400
                     if (layoutParam.leftMargin > 0 && layoutParam.leftMargin < width!!
@@ -174,6 +175,7 @@ class NewRemoteFragment : Fragment() {
                     Log.d("AAA","Button save - left: ${button.leftPositionPercent}, top: ${button.topPositionPercent})")
 
                 }
+                button.background = AppCompatResources.getDrawable(requireContext(),R.color.mid_blue)
                 // update location to buttonextended
                 button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
                 button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())

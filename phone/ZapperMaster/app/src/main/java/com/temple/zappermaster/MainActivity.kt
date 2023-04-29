@@ -7,11 +7,10 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Message
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.google.android.material.tabs.TabLayout
@@ -99,6 +98,15 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         // load remote to data base
         loadRemoteList()
         loadRemoteListFromLocalDatabase()
+        supportActionBar?.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.action_bar_bg))
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        // custome action bar
+        //start
+        supportActionBar?.setDisplayShowCustomEnabled(true)
+        val layoutInflater = applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val v: View = layoutInflater.inflate(R.layout.custom_action_bar, null)
+        supportActionBar?.customView = v
+
 
         tabLayout = findViewById(R.id.tabLayout)
         tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
@@ -374,6 +382,17 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
             }
 
         })
+    }
+
+    override fun deleteRemote(remoteObj: RemoteObj) {
+        remoteViewModel.getRemoteList().value?.remove(remoteObj)
+        db.remoteDao().delete(remoteObj.model_number)
+        remoteViewModel.getRemoteList().observe(this) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container_view, RemoteListFragment())
+                .commit()
+        }
     }
 
     fun getRemoteFile(filename: String, context: Context): String {

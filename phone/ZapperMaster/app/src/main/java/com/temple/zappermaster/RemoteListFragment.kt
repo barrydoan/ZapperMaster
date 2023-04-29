@@ -6,16 +6,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.temple.zappermaster.database.AppDatabase
 
 class RemoteListFragment : Fragment() {
     private lateinit var remoteViewModel: RemoteViewModel
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,8 +60,15 @@ class RemoteListFragment : Fragment() {
             val shareEven= {remote:RemoteObj -> Unit
                 (requireActivity() as DbInterface).shareRemote(remote)
             }
+            val deleteEven = { remote :RemoteObj-> Unit
+                Log.d("AAA","delete clicked")
+                if (remoteList.getLocalFlag()){
+                    (requireActivity() as DbInterface).deleteRemote(remote)
+
+                }
+            }
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = RemoteAdapter(remoteList, clickEven, shareEven)
+            adapter = RemoteAdapter(remoteList, clickEven, shareEven, deleteEven)
             // add divider line
             addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             remoteViewModel.getRemoteList().observe(requireActivity()) {
@@ -70,17 +79,19 @@ class RemoteListFragment : Fragment() {
         }
     }
 
-    class RemoteAdapter(_remoteList: RemoteList, _clickEvent: (remote:RemoteObj)->Unit, _shareEvent: (remote:RemoteObj)->Unit): RecyclerView.Adapter<RemoteAdapter.RemoteViewHolder>() {
+    class RemoteAdapter(_remoteList: RemoteList, _clickEvent: (remote:RemoteObj)->Unit, _shareEvent: (remote:RemoteObj)->Unit, _delEvent:(remote:RemoteObj) -> Unit): RecyclerView.Adapter<RemoteAdapter.RemoteViewHolder>() {
         val remoteList = _remoteList
         val clickEven = _clickEvent
         val shareEven = _shareEvent
+        val delEven = _delEvent
 
         inner class RemoteViewHolder(_view: View) : RecyclerView.ViewHolder(_view) {
             val titleTxt: TextView = _view.findViewById(R.id.textView)
             val typeTxt: TextView = _view.findViewById(R.id.type)
-            val btnDelete: Button = _view.findViewById(R.id.btnDelete)
-            var btnShare: Button = _view.findViewById(R.id.btnShare)
-            var btnDownload: Button = _view.findViewById(R.id.btnDownload)
+            val brandTxt: TextView = _view.findViewById(R.id.brand)
+            val btnDelete: ImageButton = _view.findViewById(R.id.btnDelete)
+            var btnShare: ImageButton = _view.findViewById(R.id.btnShare)
+            var btnDownload: ImageButton = _view.findViewById(R.id.btnDownload)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RemoteViewHolder {
@@ -94,6 +105,7 @@ class RemoteListFragment : Fragment() {
             val remote = remoteList[position]
             holder.titleTxt.text = remote.model_number
             holder.typeTxt.text = remote.type
+            holder.brandTxt.text = remote.manufacture
 
             holder.btnDelete.visibility = View.INVISIBLE
             holder.btnShare.visibility = View.INVISIBLE
@@ -108,6 +120,7 @@ class RemoteListFragment : Fragment() {
 
             holder.itemView.setOnClickListener{clickEven(remote)}
             holder.btnShare.setOnClickListener {shareEven(remote)}
+            holder.btnDelete.setOnClickListener{delEven(remote)}
         }
 
         override fun getItemCount(): Int {
