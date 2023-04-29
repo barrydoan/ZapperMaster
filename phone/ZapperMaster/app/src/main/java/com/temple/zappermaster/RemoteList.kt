@@ -2,17 +2,23 @@ package com.temple.zappermaster
 
 class RemoteList {
     private var remotes: ArrayList<RemoteObj> = ArrayList()
+    private var isLocal: Boolean = true
 
-    fun addAll(books_: ArrayList<RemoteObj>) {
-        remotes = books_
+    constructor(isLocal: Boolean) {
+        this.isLocal = isLocal
     }
 
-    fun add(book: RemoteObj) {
-        remotes.add(book)
+
+    fun addAll(remotes_: ArrayList<RemoteObj>) {
+        remotes = remotes_
     }
 
-    fun remove(book: RemoteObj) {
-        remotes.remove(book)
+    fun add(remote: RemoteObj) {
+        remotes.add(remote)
+    }
+
+    fun remove(remote: RemoteObj) {
+        remotes.remove(remote)
     }
 
     fun removeAll() {
@@ -25,5 +31,13 @@ class RemoteList {
 
     fun size(): Int {
         return remotes.size
+    }
+
+    fun setLocalFlag(flag: Boolean) {
+        this.isLocal = flag
+    }
+
+    fun getLocalFlag(): Boolean {
+        return this.isLocal
     }
 }

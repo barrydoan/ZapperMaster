@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -42,7 +43,7 @@ class RemoteListFragment : Fragment() {
             }
             else {
                 Log.d("AAA", "New remote list")
-                remoteList = RemoteList()
+                remoteList = RemoteList(true)
                 remoteViewModel.setRemoteList(remoteList)
             }
             Log.d("AAA","RemoteListFrag-$remoteList")
@@ -72,6 +73,9 @@ class RemoteListFragment : Fragment() {
         inner class RemoteViewHolder(_view: View) : RecyclerView.ViewHolder(_view) {
             val titleTxt: TextView = _view.findViewById(R.id.textView)
             val typeTxt: TextView = _view.findViewById(R.id.type)
+            val btnDelete: Button = _view.findViewById(R.id.btnDelete)
+            var btnShare: Button = _view.findViewById(R.id.btnShare)
+            var btnDownload: Button = _view.findViewById(R.id.btnDownload)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RemoteViewHolder {
@@ -83,9 +87,19 @@ class RemoteListFragment : Fragment() {
 
         override fun onBindViewHolder(holder: RemoteViewHolder, position: Int) {
             val remote = remoteList[position]
-            // update information with each book
             holder.titleTxt.text = remote.model_number
             holder.typeTxt.text = remote.type
+
+            holder.btnDelete.visibility = View.INVISIBLE
+            holder.btnShare.visibility = View.INVISIBLE
+            holder.btnDownload.visibility = View.INVISIBLE
+            if (remoteList.getLocalFlag()) {
+                holder.btnDelete.visibility = View.VISIBLE
+                holder.btnShare.visibility = View.VISIBLE
+            }
+            else {
+                holder.btnDownload.visibility = View.VISIBLE
+            }
 
             holder.itemView.setOnClickListener{clickEven(remote)}
         }

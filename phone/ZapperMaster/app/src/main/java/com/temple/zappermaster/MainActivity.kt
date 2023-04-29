@@ -142,8 +142,10 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
     private fun loadRemoteListFromLocalDatabase() {
         var remoteList = remoteViewModel.getRemoteList().value
         if (remoteList == null) {
-            remoteList = RemoteList()
+            remoteList = RemoteList(true)
         }
+        remoteList.setLocalFlag(true)
+
 
         // update view model
         var remoteListDao = db.remoteDao().getAll()
@@ -181,8 +183,9 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
 
                 var remoteList = remoteViewModel.getRemoteList().value
                 if (remoteList == null) {
-                    remoteList = RemoteList()
+                    remoteList = RemoteList(false)
                 }
+                remoteList.setLocalFlag(false)
                 remoteList.removeAll()
                 remoteList.addAll(remoteObjList)
                 remoteViewModel.setRemoteList(remoteList)
