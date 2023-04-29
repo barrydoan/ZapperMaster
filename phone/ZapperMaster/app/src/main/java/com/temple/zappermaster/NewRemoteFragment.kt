@@ -1,6 +1,8 @@
 package com.temple.zappermaster
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
@@ -10,11 +12,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,6 +45,7 @@ class NewRemoteFragment : Fragment() {
     private lateinit var remoteViewModel: RemoteViewModel
     private var width:Int? = null
     private var height:Int? = null
+    private var modelNumber: String? = null
 
     private var selectedButton:ButtonExtended? = null
 
@@ -65,6 +70,26 @@ class NewRemoteFragment : Fragment() {
         btnDelete = layout.findViewById(R.id.btnDelete)
         btnSave = layout.findViewById(R.id.btnSave)
         editorLayout = layout.findViewById(R.id.editorLayout)
+        val alert: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+        val edittext = EditText(requireContext())
+        alert.setMessage("Please Enter your remote model")
+        alert.setTitle("Creating new Remote")
+
+        alert.setView(edittext)
+
+        alert.setPositiveButton("Confirm"
+        ) { _, _ -> //What ever you want to do with the value
+            modelNumber = edittext.text.toString()
+        }
+
+        alert.setNegativeButton("Cancel"
+        ) { _, _ ->
+            val intent = Intent(context, MainActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            requireContext().startActivity(intent)
+        }
+
+        alert.show()
         return layout
     }
 
@@ -95,7 +120,7 @@ class NewRemoteFragment : Fragment() {
         }
 
         btnSave?.setOnClickListener {
-            (activity as DbInterface).saveRemote("test2","Tv","sony",false,buttonList)
+            (activity as DbInterface).saveRemote(modelNumber.toString(),"Tv","sony",false,buttonList)
 
 
         }

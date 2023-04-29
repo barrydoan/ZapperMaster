@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         ViewModelProvider(this)[RemoteViewModel::class.java]
     }
     private val remoteListFragment = RemoteListFragment()
-    private val editorFragment = EditorFragment()
     private lateinit var db: AppDatabase
     private lateinit var tabLayout: TabLayout
     private lateinit var buttonObj: ButtonObj
@@ -233,13 +232,6 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container_view, remoteListFragment)
-                    .commit()
-                true
-            }
-            R.id.design_remote -> {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_view, editorFragment)
                     .commit()
                 true
             }
