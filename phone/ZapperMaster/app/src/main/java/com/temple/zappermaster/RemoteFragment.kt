@@ -35,16 +35,13 @@ class RemoteFragment : Fragment() {
     private var param2: String? = null
     private var buttonDTOList: MutableList<ButtonDTO> = ArrayList()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
     }
-
     @SuppressLint("ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,9 +67,6 @@ class RemoteFragment : Fragment() {
 
         val jsonArray = JSONArray(jsonString)
         Log.d("AAA", jsonString.toString())
-//        var jsonObject = JSONObject(jsonString)
-//        var jsonArray = jsonObject.getJSONArray("buttons")
-        // convert to buttonDTO
 
         for (i in 1..jsonArray.length()) {
             var json = jsonArray.getJSONObject(i - 1)
@@ -126,7 +120,6 @@ class RemoteFragment : Fragment() {
             } else {
                 button.text = buttonDTO.displayName
             }
-//            button.text = buttonDTO.displayName
 
 
             Log.d("AAA", "${button.width}")
@@ -145,7 +138,7 @@ class RemoteFragment : Fragment() {
                 Log.d("AAA", "Send code $code")
                 (activity as IrInterface).sendIrCode(code)
             }
-//            ConstraintLayout.addView(button)
+
             (layout2 as RelativeLayout).addView(button)
         }
 

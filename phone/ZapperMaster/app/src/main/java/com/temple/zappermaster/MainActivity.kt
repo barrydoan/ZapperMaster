@@ -228,13 +228,6 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
                     .commit()
                 true
             }
-            R.id.remote -> {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_view, remoteListFragment)
-                    .commit()
-                true
-            }
             R.id.newRemote -> {
                 supportFragmentManager
                     .beginTransaction()
@@ -375,15 +368,8 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
             jArray.put(jObject)
 
         }
-        var remote: Remote = Remote(name, shared, jArray.toString(), false, type, manufacture)
+        var remote = Remote(name, shared, jArray.toString(), false, type, manufacture)
         db.remoteDao().insert(remote)
-    }
-
-
-    private fun loadSelectedRemote(name: String) {
-        val remote = db.remoteDao().loadAllByModel(name);
-        val usingRemote = RemoteConverter().toObj(remote)
-        remoteViewModel.setSelectedRemote(usingRemote)
     }
 
     fun getRemoteFile(filename: String, context: Context): String {

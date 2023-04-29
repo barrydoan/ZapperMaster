@@ -11,10 +11,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -46,6 +43,8 @@ class NewRemoteFragment : Fragment() {
     private var width:Int? = null
     private var height:Int? = null
     private var modelNumber: String? = null
+    private var type: String? = null
+    private var manufacturer: String? = null
 
     private var selectedButton:ButtonExtended? = null
 
@@ -71,15 +70,39 @@ class NewRemoteFragment : Fragment() {
         btnSave = layout.findViewById(R.id.btnSave)
         editorLayout = layout.findViewById(R.id.editorLayout)
         val alert: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-        val edittext = EditText(requireContext())
-        alert.setMessage("Please Enter your remote model")
+//        val edittext = EditText(requireContext())
+//        val edittext2 = EditText(requireContext())
+//        val edittext3 = EditText(requireContext())
+        alert.setMessage("Please enter your remote information.")
         alert.setTitle("Creating new Remote")
 
-        alert.setView(edittext)
+        val alertDialogLayout = LinearLayout(requireContext())
+        alertDialogLayout.orientation = LinearLayout.VERTICAL
+
+        val model = EditText(requireContext())
+        model.setSingleLine()
+        model.hint = "Model Number"
+        alertDialogLayout.addView(model)
+
+        val typeOfRemote = EditText(requireContext())
+        typeOfRemote.setSingleLine()
+        typeOfRemote.hint = "Type"
+        alertDialogLayout.addView(typeOfRemote)
+
+        val brand = EditText(requireContext())
+        brand.setSingleLine()
+        brand.hint = "Manufacturer"
+        alertDialogLayout.addView(brand)
+
+        alertDialogLayout.setPadding(50, 40, 50, 10)
+
+        alert.setView(alertDialogLayout)
 
         alert.setPositiveButton("Confirm"
         ) { _, _ -> //What ever you want to do with the value
-            modelNumber = edittext.text.toString()
+            modelNumber = model.text.toString()
+            type = typeOfRemote.text.toString()
+            manufacturer = brand.text.toString()
         }
 
         alert.setNegativeButton("Cancel"
@@ -120,8 +143,7 @@ class NewRemoteFragment : Fragment() {
         }
 
         btnSave?.setOnClickListener {
-            (activity as DbInterface).saveRemote(modelNumber.toString(),"Tv","sony",false,buttonList)
-
+            (activity as DbInterface).saveRemote(modelNumber.toString(),type.toString(),manufacturer.toString(),false,buttonList)
 
         }
 
@@ -167,7 +189,7 @@ class NewRemoteFragment : Fragment() {
         }
     }
 
-    fun resetBackgroundColorForButtonList() {
+    private fun resetBackgroundColorForButtonList() {
 
     }
 
