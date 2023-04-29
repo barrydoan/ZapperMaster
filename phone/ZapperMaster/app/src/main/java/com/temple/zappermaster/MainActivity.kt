@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
     }
 
     private fun loadRemoteListFromApi() {
-        Helper.api.getRemoteList(this, "", object : Helper.api.Response {
+        Helper.api.getRemoteList(this, object : Helper.api.Response {
             override fun processResponse(response: JSONObject) {
                 Log.d("AAA", response.toString())
                 // extract
@@ -373,6 +373,15 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         }
         var remote = Remote(name, shared, jArray.toString(), false, type, manufacture)
         db.remoteDao().insert(remote)
+    }
+
+    override fun shareRemote(remoteObj: RemoteObj) {
+        Helper.api.shareRemote(this, remoteObj, object :Helper.api.Response{
+            override fun processResponse(response: JSONObject) {
+                Log.d("AAA", response.toString())
+            }
+
+        })
     }
 
     fun getRemoteFile(filename: String, context: Context): String {

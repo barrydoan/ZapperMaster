@@ -54,8 +54,12 @@ class RemoteListFragment : Fragment() {
                 (requireActivity() as SelectionFragmentInterface).remoteSelected()
                 // notify the main that a book is selected
             }
+
+            val shareEven= {remote:RemoteObj -> Unit
+                (requireActivity() as DbInterface).shareRemote(remote)
+            }
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = RemoteAdapter(remoteList, clickEven)
+            adapter = RemoteAdapter(remoteList, clickEven, shareEven)
             // add divider line
             addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             remoteViewModel.getRemoteList().observe(requireActivity()) {
@@ -66,9 +70,10 @@ class RemoteListFragment : Fragment() {
         }
     }
 
-    class RemoteAdapter(_remoteList: RemoteList, _clickEvent: (remote:RemoteObj)->Unit): RecyclerView.Adapter<RemoteAdapter.RemoteViewHolder>() {
+    class RemoteAdapter(_remoteList: RemoteList, _clickEvent: (remote:RemoteObj)->Unit, _shareEvent: (remote:RemoteObj)->Unit): RecyclerView.Adapter<RemoteAdapter.RemoteViewHolder>() {
         val remoteList = _remoteList
         val clickEven = _clickEvent
+        val shareEven = _shareEvent
 
         inner class RemoteViewHolder(_view: View) : RecyclerView.ViewHolder(_view) {
             val titleTxt: TextView = _view.findViewById(R.id.textView)
@@ -102,6 +107,7 @@ class RemoteListFragment : Fragment() {
             }
 
             holder.itemView.setOnClickListener{clickEven(remote)}
+            holder.btnShare.setOnClickListener {shareEven(remote)}
         }
 
         override fun getItemCount(): Int {
