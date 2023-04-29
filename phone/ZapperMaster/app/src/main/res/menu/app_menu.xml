@@ -3,6 +3,4 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/newRemote"
         android:title="New remote" />
-    <item android:id="@+id/test"
-        android:title="Test device" />
 </menu>

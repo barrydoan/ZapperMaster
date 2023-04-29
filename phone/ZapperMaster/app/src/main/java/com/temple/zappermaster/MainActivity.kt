@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
     private val remoteListFragment = RemoteListFragment()
     private lateinit var db: AppDatabase
     private lateinit var tabLayout: TabLayout
-    private lateinit var buttonObj: ButtonObj
 
     /*
      * Notifications from UsbService will be received here.
@@ -224,13 +223,6 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle item selection
         return when (item.itemId) {
-            R.id.test -> {
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_view, TestFragment.newInstance("", ""))
-                    .commit()
-                true
-            }
             R.id.newRemote -> {
                 supportFragmentManager
                     .beginTransaction()
