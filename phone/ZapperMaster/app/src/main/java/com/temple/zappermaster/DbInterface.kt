@@ -8,5 +8,6 @@ interface DbInterface {
     fun checkExistedOnLocal(modelNumber: String): Boolean
     fun saveRemote(remoteObj: RemoteObj)
     fun loadAllTypes(): MutableList<TypeObj>
+    // test
     fun loadAllManufacture(): MutableList<ManufactureObj>
 }
