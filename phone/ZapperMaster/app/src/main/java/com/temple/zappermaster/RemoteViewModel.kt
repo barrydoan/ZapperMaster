@@ -16,7 +16,6 @@ class RemoteViewModel : ViewModel() {
     private val selectedRemote : MutableLiveData<RemoteObj?> by lazy {
         MutableLiveData<RemoteObj?>()
     }
-
     fun setRemoteList(_remoteList: RemoteList){
         remoteList.value = _remoteList
     }

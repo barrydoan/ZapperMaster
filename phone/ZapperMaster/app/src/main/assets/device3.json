@@ -1,65 +1,44 @@
 
 {
-  "model_number": "RMT-CCS15iP_3",
+  "model_number": "caf-w36usw",
   "shared": false,
   "buttons": [
     {
       "background_color": "white",
       "size": "normal",
       "top_position_percent": 0.05,
-      "left_position_percent": 0.75,
+      "left_position_percent": 0.65,
       "display_name": "Off",
       "code": "<23|44|57|15>"
     },
     {
       "background_color": "white",
       "size": "normal",
-      "top_position_percent": 0.35,
-      "left_position_percent": 0.20,
+      "top_position_percent": 0.05,
+      "left_position_percent": 0.04,
       "display_name": "Stop",
       "code": "<23|64|33|15>"
     },
+
     {
       "background_color": "white",
       "size": "normal",
-      "top_position_percent": 0.45,
-      "left_position_percent": 0.47,
-      "display_name": "VolUp",
-      "code": "<23|44|12|15>"
-    },
-    {
-      "background_color": "white",
-      "size": "normal",
-      "top_position_percent": 0.45,
-      "left_position_percent": 0.75,
+      "top_position_percent": 0.155,
+      "left_position_percent": 0.34,
       "display_name": "ChannelUp",
       "code": "<23|64|73|15>"
     },
+
+
     {
       "background_color": "white",
       "size": "normal",
-      "top_position_percent": 0.55,
-      "left_position_percent": 0.20,
-      "display_name": "Sound",
-      "code": "<23|44|30|15>"
-    },
-    {
-      "background_color": "white",
-      "size": "normal",
-      "top_position_percent": 0.55,
-      "left_position_percent": 0.47,
-      "display_name": "VolDown",
-      "code": "<23|44|13|15>"
-    },
-    {
-      "background_color": "white",
-      "size": "normal",
-      "top_position_percent": 0.55,
-      "left_position_percent": 0.75,
+      "top_position_percent": 0.25,
+      "left_position_percent": 0.34,
       "display_name": "ChannelDown",
       "code": "<23|64|74|15>"
     }
   ],
-  "type": "Speaker",
-  "manufacture": "Sony"
+  "type": "Air purifier",
+  "manufacture": "Toshiba"
 }

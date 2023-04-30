@@ -1,20 +1,22 @@
 package com.temple.zappermaster
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,8 +40,12 @@ class NewRemoteFragment : Fragment() {
     private var btnSave:Button? = null
     private var editorLayout:RelativeLayout? = null
     private var buttonList:MutableList<ButtonExtended> = ArrayList()
+    private lateinit var remoteViewModel: RemoteViewModel
     private var width:Int? = null
     private var height:Int? = null
+    private var modelNumber: String? = null
+    private var type: String? = null
+    private var manufacturer: String? = null
 
     private var selectedButton:ButtonExtended? = null
 
@@ -64,6 +70,51 @@ class NewRemoteFragment : Fragment() {
         btnDelete = layout.findViewById(R.id.btnDelete)
         btnSave = layout.findViewById(R.id.btnSave)
         editorLayout = layout.findViewById(R.id.editorLayout)
+        val alert: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+//        val edittext = EditText(requireContext())
+//        val edittext2 = EditText(requireContext())
+//        val edittext3 = EditText(requireContext())
+        alert.setMessage("Please enter your remote information.")
+        alert.setTitle("Creating new Remote")
+
+        val alertDialogLayout = LinearLayout(requireContext())
+        alertDialogLayout.orientation = LinearLayout.VERTICAL
+
+        val model = EditText(requireContext())
+        model.setSingleLine()
+        model.hint = "Model Number"
+        alertDialogLayout.addView(model)
+
+        val typeOfRemote = EditText(requireContext())
+        typeOfRemote.setSingleLine()
+        typeOfRemote.hint = "Type"
+        alertDialogLayout.addView(typeOfRemote)
+
+        val brand = EditText(requireContext())
+        brand.setSingleLine()
+        brand.hint = "Manufacturer"
+        alertDialogLayout.addView(brand)
+
+        alertDialogLayout.setPadding(50, 40, 50, 10)
+
+        alert.setView(alertDialogLayout)
+
+        alert.setPositiveButton("Confirm"
+        ) { _, _ -> //What ever you want to do with the value
+            modelNumber = model.text.toString()
+            type = typeOfRemote.text.toString()
+            manufacturer = brand.text.toString()
+        }
+
+        alert.setNegativeButton("Cancel"
+        ) { _, _ ->
+            val intent = Intent(context, MainActivity::class.java)
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            requireContext().startActivity(intent)
+
+        }
+
+        alert.show()
         return layout
     }
 
@@ -94,52 +145,54 @@ class NewRemoteFragment : Fragment() {
         }
 
         btnSave?.setOnClickListener {
+            (activity as DbInterface).saveRemote(modelNumber.toString(),type.toString(),manufacturer.toString(),false,buttonList)
 
         }
 
         btnAdd?.setOnClickListener {
             var button = ButtonExtended(requireContext())
             button.text = "New button"
+            button.background = AppCompatResources.getDrawable(requireContext(),R.color.mid_blue)
+            var layoutParam = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+            )
+
             button.setOnTouchListener { button, event ->
                 resetBackgroundColorForButtonList()
                 selectedButton = (button as ButtonExtended)
                 selectedButton!!.setBackgroundColor(Color.BLUE)
                 txtName?.text = selectedButton!!.text
                 txtCode?.text = selectedButton!!.code
+
                 if (event?.action == MotionEvent.ACTION_MOVE) {
-                    val layoutParam = RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.WRAP_CONTENT,
-                        RelativeLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    layoutParam.leftMargin = event.rawX.toInt() - (button!!.width / 2);
-                    layoutParam.topMargin = event.rawY.toInt() - (button!!.height / 2) - 400
+                    layoutParam.leftMargin = event.rawX.toInt() - (button.width / 2)
+                    layoutParam.topMargin = event.rawY.toInt() - (button.height / 2) - 400
                     if (layoutParam.leftMargin > 0 && layoutParam.leftMargin < width!!
                         && layoutParam.topMargin > 0 && layoutParam.topMargin < height!!) {
                         button.layoutParams = layoutParam
                     }
+                    Log.d("AAA","Button save - left: ${button.leftPositionPercent}, top: ${button.topPositionPercent})")
+
                 }
+                button.background = AppCompatResources.getDrawable(requireContext(),R.color.mid_blue)
+                // update location to buttonextended
+                button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
+                button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())
                 true
             }
-            var layoutParam = RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT
-            )
+
             layoutParam.leftMargin = (width!! / 2).toInt() - 100
             layoutParam.topMargin = (height!! / 2).toInt()
             button.layoutParams = layoutParam
-            // update location to buttonextended
-            button.leftPositionPercent = layoutParam.leftMargin / (width!!.toDouble())
-            button.topPositionPercent = layoutParam.topMargin / (height!!.toDouble())
-
             editorLayout?.addView(button)
             buttonList.add(button)
+
         }
     }
 
-    fun resetBackgroundColorForButtonList() {
-        for (button in buttonList) {
-            button.setBackgroundColor(Color.GRAY)
-        }
+    private fun resetBackgroundColorForButtonList() {
+
     }
 
     companion object {

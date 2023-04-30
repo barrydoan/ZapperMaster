@@ -1,8 +1,6 @@
 package com.temple.zappermaster
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.AssetManager
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -37,16 +35,13 @@ class RemoteFragment : Fragment() {
     private var param2: String? = null
     private var buttonDTOList: MutableList<ButtonDTO> = ArrayList()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
-
     }
-
     @SuppressLint("ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,19 +56,18 @@ class RemoteFragment : Fragment() {
         Log.d("AAA","remote-${remote.toString()}")
 
         var jsonString = remote?.buttons
+        Log.d("AAA","Json String in RemoteFragment $jsonString")
+        var jsonArray = JSONArray()
 
         if( remote != null){
+            jsonArray = JSONArray(jsonString)
 
         }
         else{
             Log.d("AAA","Remote Not Exist")
         }
 
-        val jsonArray = JSONArray(jsonString)
         Log.d("AAA", jsonString.toString())
-//        var jsonObject = JSONObject(jsonString)
-//        var jsonArray = jsonObject.getJSONArray("buttons")
-        // convert to buttonDTO
 
         for (i in 1..jsonArray.length()) {
             var json = jsonArray.getJSONObject(i - 1)
@@ -87,20 +81,24 @@ class RemoteFragment : Fragment() {
             )
             buttonDTOList.add(buttonDTO)
         }
-
-        var buttonList: MutableList<Button> = ArrayList()
-
         var layout2 = layout.findViewById<View>(R.id.constraint_layout)
 
         var width = Resources.getSystem().displayMetrics.widthPixels
         var heigh = Resources.getSystem().displayMetrics.heightPixels
+
+
+
+        Log.d("AAA","created layout: width $width, height: $heigh")
 
         for (buttonDTO in buttonDTOList) {
             var button = MaterialButton(requireContext())
             button.width = 75
             button.height = 150
             button.cornerRadius = 50
-            button.iconSize = 75
+            button.iconSize = 100
+            button.iconTint = ContextCompat.getColorStateList(requireContext(),R.color.light_silver)
+
+            button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_TOP
             button.backgroundTintList = ContextCompat.getColorStateList(requireContext(),R.color.ic_tint_color)
             Log.d("AAA: Button Name", buttonDTO.displayName)
 
@@ -124,8 +122,8 @@ class RemoteFragment : Fragment() {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove)
             } else {
                 button.text = buttonDTO.displayName
+                button.setTextColor(ContextCompat.getColorStateList(requireContext(),R.color.light_silver))
             }
-            button.text = buttonDTO.displayName
 
 
             Log.d("AAA", "${button.width}")
@@ -134,7 +132,7 @@ class RemoteFragment : Fragment() {
                 RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT
             )
-            layoutParam.leftMargin = (buttonDTO.leftPositionPercent * width).toInt() - 100
+            layoutParam.leftMargin = (buttonDTO.leftPositionPercent * width).toInt()
             layoutParam.topMargin = (buttonDTO.topPositionPercent * heigh).toInt()
 
             button.layoutParams = layoutParam
@@ -144,7 +142,7 @@ class RemoteFragment : Fragment() {
                 Log.d("AAA", "Send code $code")
                 (activity as IrInterface).sendIrCode(code)
             }
-//            ConstraintLayout.addView(button)
+
             (layout2 as RelativeLayout).addView(button)
         }
 
@@ -163,17 +161,6 @@ class RemoteFragment : Fragment() {
         }
         return result;
     }
-
-
-    fun getRemoteFile(filename: String, context: Context): String {
-        var manager : AssetManager = context.assets
-        var file = manager.open(filename)
-        var bytes = ByteArray(file.available())
-        file.read(bytes)
-        file.close()
-        return String(bytes)
-    }
-
     companion object {
         /**
          * Use this factory method to create a new instance of

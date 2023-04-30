@@ -12,6 +12,8 @@ interface RemoteDao {
     fun insert(remote: Remote)
     @Query("UPDATE remote set is_deleted = 1")
     fun deleteAll()
+    @Query("DELETE FROM remote WHERE model_number = :model_number")
+    fun delete(model_number: String)
     @Query("SELECT * FROM remote WHERE model_number = :model_number")
     fun loadAllByModel(model_number: String): Remote
 }
