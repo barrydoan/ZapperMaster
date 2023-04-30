@@ -14,6 +14,6 @@ interface RemoteDao {
     fun deleteAll()
     @Query("DELETE FROM remote WHERE model_number = :model_number")
     fun delete(model_number: String)
-    @Query("SELECT * FROM remote WHERE model_number = :model_number")
-    fun loadAllByModel(model_number: String): Remote
+    @Query("SELECT * FROM remote WHERE model_number = :model_number and is_deleted = 0")
+    fun loadAllByModel(model_number: String): Remote?
 }
