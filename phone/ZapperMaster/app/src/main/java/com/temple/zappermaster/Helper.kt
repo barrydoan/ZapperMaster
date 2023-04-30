@@ -20,6 +20,8 @@ class Helper {
     object api {
 
         const val ENDPOINT_REMOTES = "remotes/?format=json"
+        const val ENDPOINT_TYPES = "types/"
+        const val ENDPOINT_MANUFACTURES = "manufactures/"
 
         const val API_BASE = "http://10.0.2.2:8000/"
 
@@ -29,6 +31,14 @@ class Helper {
 
         fun getRemoteList(context: Context, response: Response?) {
             makeGetRequest(context, ENDPOINT_REMOTES, response)
+        }
+
+        fun getTypeList(context: Context, response: Response?) {
+            makeGetRequest(context, ENDPOINT_TYPES, response)
+        }
+
+        fun getManufactureList(context: Context, response: Response?) {
+            makeGetRequest(context, ENDPOINT_MANUFACTURES, response)
         }
 
         fun shareRemote(context: Context, remoteObj: RemoteObj, response: Response?) {
