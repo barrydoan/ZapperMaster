@@ -17,5 +17,6 @@ class Constants {
         const val REMOTE_SHARED = "shared"
         const val REMOTE_TYPE = "type"
         const val REMOTE_MANUFACTURE = "manufacture"
+        const val REMOTE_CREATED = "created"
     }
 }

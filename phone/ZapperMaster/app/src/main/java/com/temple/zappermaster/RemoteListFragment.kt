@@ -59,6 +59,9 @@ class RemoteListFragment : Fragment() {
 
             val shareEven= {remote:RemoteObj -> Unit
                 (requireActivity() as DbInterface).shareRemote(remote)
+                // update status of remote in database
+                remote.shared = true
+                (requireActivity() as DbInterface).updateRemote(remote)
             }
             val deleteEven = { remote :RemoteObj-> Unit
                 Log.d("AAA","delete clicked")
@@ -112,7 +115,10 @@ class RemoteListFragment : Fragment() {
             holder.btnDownload.visibility = View.INVISIBLE
             if (remoteList.getLocalFlag()) {
                 holder.btnDelete.visibility = View.VISIBLE
-                holder.btnShare.visibility = View.VISIBLE
+                if (!remote.shared) {
+                    holder.btnShare.visibility = View.VISIBLE
+                }
+
             }
             else {
                 holder.btnDownload.visibility = View.VISIBLE

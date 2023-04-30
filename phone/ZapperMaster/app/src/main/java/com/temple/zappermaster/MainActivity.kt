@@ -395,6 +395,11 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         }
     }
 
+    override fun updateRemote(remoteObj: RemoteObj) {
+        var remote = RemoteConverter().toDao(remoteObj)
+        db.remoteDao().insert(remote)
+    }
+
     fun getRemoteFile(filename: String, context: Context): String {
         var manager: AssetManager = context.assets
         var file = manager.open(filename)
