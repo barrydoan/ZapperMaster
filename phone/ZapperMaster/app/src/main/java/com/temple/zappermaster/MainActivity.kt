@@ -375,6 +375,11 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         db.remoteDao().insert(remote)
     }
 
+    override fun saveRemote(remoteObj: RemoteObj) {
+        var remote = RemoteConverter().toDao(remoteObj)
+        db.remoteDao().insert(remote)
+    }
+
     override fun shareRemote(remoteObj: RemoteObj) {
         Helper.api.shareRemote(this, remoteObj, object :Helper.api.Response{
             override fun processResponse(response: JSONObject) {

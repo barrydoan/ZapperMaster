@@ -6,4 +6,5 @@ interface DbInterface {
     fun deleteRemote(remoteObj: RemoteObj)
     fun updateRemote(remoteObj: RemoteObj)
     fun checkExistedOnLocal(modelNumber: String): Boolean
+    fun saveRemote(remoteObj: RemoteObj)
 }
