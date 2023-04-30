@@ -70,8 +70,11 @@ class RemoteListFragment : Fragment() {
 
                 }
             }
+            var checkExistedInLocalDB = { modelNumber: String -> Boolean
+                (requireActivity() as DbInterface).checkExistedOnLocal(modelNumber)
+            }
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = RemoteAdapter(remoteList, clickEven, shareEven, deleteEven)
+            adapter = RemoteAdapter(remoteList, clickEven, shareEven, deleteEven, checkExistedInLocalDB)
             // add divider line
             addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
             remoteViewModel.getRemoteList().observe(requireActivity()) {
@@ -82,11 +85,12 @@ class RemoteListFragment : Fragment() {
         }
     }
 
-    class RemoteAdapter(_remoteList: RemoteList, _clickEvent: (remote:RemoteObj)->Unit, _shareEvent: (remote:RemoteObj)->Unit, _delEvent:(remote:RemoteObj) -> Unit): RecyclerView.Adapter<RemoteAdapter.RemoteViewHolder>() {
+    class RemoteAdapter(_remoteList: RemoteList, _clickEvent: (remote:RemoteObj)->Unit, _shareEvent: (remote:RemoteObj)->Unit, _delEvent:(remote:RemoteObj) -> Unit, _checkExistedInLocalDb: (modelNumber: String)->Boolean): RecyclerView.Adapter<RemoteAdapter.RemoteViewHolder>() {
         val remoteList = _remoteList
         val clickEven = _clickEvent
         val shareEven = _shareEvent
         val delEven = _delEvent
+        var checkExistedInLocalDb = _checkExistedInLocalDb
 
         inner class RemoteViewHolder(_view: View) : RecyclerView.ViewHolder(_view) {
             val titleTxt: TextView = _view.findViewById(R.id.textView)
@@ -121,6 +125,7 @@ class RemoteListFragment : Fragment() {
 
             }
             else {
+                if (!checkExistedInLocalDb(remote.model_number))
                 holder.btnDownload.visibility = View.VISIBLE
             }
 

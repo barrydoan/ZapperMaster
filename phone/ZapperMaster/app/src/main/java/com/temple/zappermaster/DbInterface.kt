@@ -5,4 +5,5 @@ interface DbInterface {
     fun shareRemote(remoteObj: RemoteObj)
     fun deleteRemote(remoteObj: RemoteObj)
     fun updateRemote(remoteObj: RemoteObj)
+    fun checkExistedOnLocal(modelNumber: String): Boolean
 }

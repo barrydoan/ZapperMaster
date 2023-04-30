@@ -400,6 +400,11 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         db.remoteDao().insert(remote)
     }
 
+    override fun checkExistedOnLocal(modelNumber: String): Boolean {
+        db.remoteDao().loadAllByModel(modelNumber) ?: return false
+        return true
+    }
+
     fun getRemoteFile(filename: String, context: Context): String {
         var manager: AssetManager = context.assets
         var file = manager.open(filename)

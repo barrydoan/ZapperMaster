@@ -27,7 +27,7 @@ class Helper {
             fun processResponse(response: JSONObject)
         }
 
-        fun getRemoteList(context: Context, response: Response?){
+        fun getRemoteList(context: Context, response: Response?) {
             makeGetRequest(context, ENDPOINT_REMOTES, response)
         }
 
@@ -43,16 +43,18 @@ class Helper {
         }
 
 
-
-
-        private fun makeGetRequest(context: Context, endPoint: String, responseCallback: Response?) {
+        private fun makeGetRequest(
+            context: Context,
+            endPoint: String,
+            responseCallback: Response?
+        ) {
             Volley.newRequestQueue(context)
-                .add(object: StringRequest(Request.Method.GET, API_BASE + endPoint, {
+                .add(object : StringRequest(Request.Method.GET, API_BASE + endPoint, {
                     Log.d("AAA", "Response: $it")
                     responseCallback?.processResponse(JSONObject(it))
                 }, {
                     it.printStackTrace()
-                }){
+                }) {
                     override fun getHeaders(): MutableMap<String, String> {
                         val params = HashMap<String, String>()
                         val creds = String.format("%s:%s", "admin", "password123")
@@ -64,14 +66,20 @@ class Helper {
                 })
         }
 
-        private fun makePostRequest(context: Context, endPoint: String, jsonObject: JSONObject, responseCallback: Response?) {
+        private fun makePostRequest(
+            context: Context,
+            endPoint: String,
+            jsonObject: JSONObject,
+            responseCallback: Response?
+        ) {
             Volley.newRequestQueue(context)
-                .add(object: JsonObjectRequest(Request.Method.POST, API_BASE + endPoint, jsonObject, {
-                    Log.d("AAA", "Response: $it")
-                    responseCallback?.processResponse(it)
-                }, {
-                    it.printStackTrace()
-                }){
+                .add(object :
+                    JsonObjectRequest(Request.Method.POST, API_BASE + endPoint, jsonObject, {
+                        Log.d("AAA", "Response: $it")
+                        responseCallback?.processResponse(it)
+                    }, {
+                        it.printStackTrace()
+                    }) {
                     override fun getHeaders(): MutableMap<String, String> {
                         val params = HashMap<String, String>()
                         val creds = String.format("%s:%s", "admin", "password123")
@@ -82,10 +90,6 @@ class Helper {
                     }
                 })
         }
-
-
-
-
 
         fun isSuccess(response: JSONObject): Boolean {
             return response.getString("status").equals("SUCCESS")
@@ -94,6 +98,5 @@ class Helper {
         fun getErrorMessage(response: JSONObject): String {
             return response.getString("message")
         }
-
     }
 }
