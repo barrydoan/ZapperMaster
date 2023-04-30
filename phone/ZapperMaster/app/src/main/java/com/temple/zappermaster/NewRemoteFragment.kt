@@ -12,7 +12,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -86,7 +85,6 @@ class NewRemoteFragment : Fragment() {
         model.hint = "Model Number"
         alertDialogLayout.addView(model)
 
-
         val typeOfRemote = EditText(requireContext())
         typeOfRemote.setSingleLine()
         typeOfRemote.hint = "Type"
@@ -98,9 +96,8 @@ class NewRemoteFragment : Fragment() {
         alertDialogLayout.addView(brand)
 
         alertDialogLayout.setPadding(50, 40, 50, 10)
+
         alert.setView(alertDialogLayout)
-
-
 
         alert.setPositiveButton("Confirm"
         ) { _, _ -> //What ever you want to do with the value

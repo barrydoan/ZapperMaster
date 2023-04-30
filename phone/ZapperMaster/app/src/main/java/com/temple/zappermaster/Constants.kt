@@ -17,14 +17,5 @@ class Constants {
         const val REMOTE_SHARED = "shared"
         const val REMOTE_TYPE = "type"
         const val REMOTE_MANUFACTURE = "manufacture"
-        const val REMOTE_CREATED = "created"
-
-        const val TYPE_ID = "id"
-        const val TYPE_NAME = "name"
-        const val TYPE_DESCRIPTION = "description"
-
-        const val MANUFACTURE_ID = "id"
-        const val MANUFACTURE_NAME = "name"
-        const val MANUFACTURE_DESCRIPTION = "description"
     }
 }

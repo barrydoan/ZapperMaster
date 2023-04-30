@@ -6,7 +6,7 @@ data class RemoteObj(
     @Json(name = "model_number")
     val model_number:String,
     @Json(name = "shared")
-    var shared: Boolean,
+    val shared: Boolean,
     @Json(name = "buttons")
     val buttons: String,
     @Json(name = "type")
