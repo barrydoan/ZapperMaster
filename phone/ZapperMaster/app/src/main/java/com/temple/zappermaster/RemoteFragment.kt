@@ -96,7 +96,9 @@ class RemoteFragment : Fragment() {
             button.height = 150
             button.cornerRadius = 50
             button.iconSize = 100
-            button.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_TOP)
+            button.iconTint = ContextCompat.getColorStateList(requireContext(),R.color.light_silver)
+
+            button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_TOP
             button.backgroundTintList = ContextCompat.getColorStateList(requireContext(),R.color.ic_tint_color)
             Log.d("AAA: Button Name", buttonDTO.displayName)
 
@@ -120,6 +122,7 @@ class RemoteFragment : Fragment() {
                 button.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_remove)
             } else {
                 button.text = buttonDTO.displayName
+                button.setTextColor(ContextCompat.getColorStateList(requireContext(),R.color.light_silver))
             }
 
 
