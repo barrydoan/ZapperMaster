@@ -129,8 +129,9 @@ class RemoteListFragment : Fragment() {
 
             }
             else {
-                if (!checkExistedInLocalDb(remote.model_number))
-                holder.btnDownload.visibility = View.VISIBLE
+                if (!checkExistedInLocalDb(remote.model_number)) {
+                    holder.btnDownload.visibility = View.VISIBLE
+                }
             }
 
             holder.itemView.setOnClickListener{clickEven(remote)}
