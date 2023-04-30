@@ -375,18 +375,10 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         db.remoteDao().insert(remote)
     }
 
-    override fun saveRemote(remoteObj: RemoteObj) {
-        var remote = RemoteConverter().toDao(remoteObj)
-        db.remoteDao().insert(remote)
-        // reload the remote
-        loadRemoteListFromApi()
-    }
-
     override fun shareRemote(remoteObj: RemoteObj) {
         Helper.api.shareRemote(this, remoteObj, object :Helper.api.Response{
             override fun processResponse(response: JSONObject) {
-                // reload the remote
-                loadRemoteListFromLocalDatabase()
+                Log.d("AAA", response.toString())
             }
 
         })
@@ -401,60 +393,6 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
                 .replace(R.id.fragment_container_view, RemoteListFragment())
                 .commit()
         }
-    }
-
-    override fun updateRemote(remoteObj: RemoteObj) {
-        var remote = RemoteConverter().toDao(remoteObj)
-        db.remoteDao().insert(remote)
-    }
-
-    override fun checkExistedOnLocal(modelNumber: String): Boolean {
-        db.remoteDao().loadAllByModel(modelNumber) ?: return false
-        return true
-    }
-
-    override fun loadAllTypes(): MutableList<TypeObj> {
-        var typeObjList = ArrayList<TypeObj>()
-        Helper.api.getTypeList(this, object : Helper.api.Response {
-            override fun processResponse(response: JSONObject) {
-                var typeListJson = response.getJSONArray("results")
-                if (typeListJson.length() > 0) {
-                    for (i in 1..typeListJson.length()) {
-                        var typeJson = typeListJson.getJSONObject(i - 1)
-                        var typeObj = TypeObj(
-                            typeJson.getInt(Constants.TYPE_ID),
-                            typeJson.getString(Constants.TYPE_NAME),
-                            typeJson.getString(Constants.TYPE_DESCRIPTION),
-                        )
-                        typeObjList.add(typeObj)
-                    }
-                }
-
-            }
-        })
-        return typeObjList
-    }
-
-    override fun loadAllManufacture(): MutableList<ManufactureObj> {
-        var manufactureObjList = ArrayList<ManufactureObj>()
-        Helper.api.getManufactureList(this, object : Helper.api.Response {
-            override fun processResponse(response: JSONObject) {
-                var manufactureListJson = response.getJSONArray("results")
-                if (manufactureListJson.length() > 0) {
-                    for (i in 1..manufactureListJson.length()) {
-                        var manufactureJson = manufactureListJson.getJSONObject(i - 1)
-                        var manufactureObj = ManufactureObj(
-                            manufactureJson.getInt(Constants.TYPE_ID),
-                            manufactureJson.getString(Constants.TYPE_NAME),
-                            manufactureJson.getString(Constants.TYPE_DESCRIPTION),
-                        )
-                        manufactureObjList.add(manufactureObj)
-                    }
-                }
-
-            }
-        })
-        return manufactureObjList
     }
 
     fun getRemoteFile(filename: String, context: Context): String {
