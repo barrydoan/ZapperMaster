@@ -373,6 +373,13 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
         }
         var remote = Remote(name, shared, jArray.toString(), false, type, manufacture)
         db.remoteDao().insert(remote)
+        loadRemoteListFromLocalDatabase()
+        remoteViewModel.getRemoteList().observe(this) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container_view, RemoteListFragment())
+                .commit()
+        }
     }
 
     override fun saveRemote(remoteObj: RemoteObj) {
