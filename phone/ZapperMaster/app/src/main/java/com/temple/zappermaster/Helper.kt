@@ -53,7 +53,7 @@ class Helper {
         }
 
 
-        fun makeGetRequest(
+        private fun makeGetRequest(
             context: Context,
             endPoint: String,
             responseCallback: Response?
@@ -76,7 +76,7 @@ class Helper {
                 })
         }
 
-        fun makePostRequest(
+        private fun makePostRequest(
             context: Context,
             endPoint: String,
             jsonObject: JSONObject,
