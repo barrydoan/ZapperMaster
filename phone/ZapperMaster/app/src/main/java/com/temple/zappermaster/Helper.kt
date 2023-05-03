@@ -23,7 +23,8 @@ class Helper {
         const val ENDPOINT_TYPES = "types/"
         const val ENDPOINT_MANUFACTURES = "manufactures/"
 
-        const val API_BASE = "http://10.0.2.2:8000/"
+        //const val API_BASE = "http://10.0.2.2:8000/"
+        const val API_BASE = "http://192.168.137.1:8000/"
 
         interface Response {
             fun processResponse(response: JSONObject)
