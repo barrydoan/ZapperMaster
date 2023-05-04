@@ -11,6 +11,17 @@ Y to D7
 The code to decode the IR signal is inside forder hardware/arduino
 
 ## Android
+The Android application is located in ZapperMaster\phone\ZapperMaster
+Step to run the api
+Go to folder ZapperMaster\webapi\zappermaster
+● Create python environment: python -m venv env
+● Active python environment: .\env\Scripts\Activate.ps1
+● Install dependencies: pip install -r requirements.txt
+● Go to folder ZapperMaster\webapi\zappermaster\zappermasstersite
+● Run the server: python manage.py runserver 0.0.0.0:8000
+
+## Web api
+The web api is located in ZapperMaster\webapi\zappermaster
 
 ## Resources
 ###### decode IR code
