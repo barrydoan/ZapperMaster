@@ -142,8 +142,10 @@ class NewRemoteFragment : Fragment() {
 
         ViewModelProvider(requireActivity())[RemoteViewModel::class.java].getLastIrCode().observe(requireActivity()) {
             if (selectedButton != null) {
-                selectedButton?.code = it
-                txtCode?.text = it
+                var convertedCode = it.replace("[", "<")
+                convertedCode = convertedCode.replace("]", ">")
+                selectedButton?.code = convertedCode
+                txtCode?.text = convertedCode
             }
         }
 
