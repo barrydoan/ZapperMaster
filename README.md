@@ -1,5 +1,5 @@
 # ZapperMaster
-
+![screenshot](https://github.com/barrydoan/ZapperMaster/blob/master/remote%20on%20phone.png?raw=true)
 ![screenshot](https://github.com/barrydoan/ZapperMaster/blob/master/hardware.jpg?raw=true)
 ## Setup the arduino
 Install the arduino IDE
