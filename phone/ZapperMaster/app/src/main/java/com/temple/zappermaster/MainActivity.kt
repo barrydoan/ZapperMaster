@@ -135,6 +135,7 @@ class MainActivity : AppCompatActivity(), RemoteListFragment.SelectionFragmentIn
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
                 Log.d("AAA", "onTabReselected")
+                onTabSelected(tab)
             }
         })
         // load remote list fragment
