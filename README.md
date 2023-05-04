@@ -25,6 +25,7 @@ Go to folder ZapperMaster\webapi\zappermaster
 - Install dependencies: pip install -r requirements.txt
 - Go to folder ZapperMaster\webapi\zappermaster\zappermasstersite
 - Run the server: python manage.py runserver 0.0.0.0:8000
+- admin login admin/password123
 
 ## Web api
 The web api is located in ZapperMaster\webapi\zappermaster
