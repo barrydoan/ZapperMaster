@@ -1,6 +1,7 @@
 package com.temple.zappermaster
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -91,7 +92,7 @@ class RemoteFragment : Fragment() {
         Log.d("AAA","created layout: width $width, height: $heigh")
 
         for (buttonDTO in buttonDTOList) {
-            var button = MaterialButton(requireContext())
+            var button = MyMaterialButton(requireContext())
             button.width = 75
             button.height = 150
             button.cornerRadius = 50
@@ -124,6 +125,7 @@ class RemoteFragment : Fragment() {
                 button.text = buttonDTO.displayName
                 button.setTextColor(ContextCompat.getColorStateList(requireContext(),R.color.light_silver))
             }
+            button.code = buttonDTO.code
 
 
             Log.d("AAA", "${button.width}")
@@ -137,8 +139,8 @@ class RemoteFragment : Fragment() {
 
             button.layoutParams = layoutParam
             button.setOnClickListener {
-                var button = it as Button
-                var code = findCommandByText(button.text.toString(), buttonDTOList)
+                var button = it as MyMaterialButton
+                var code = button.code
                 Log.d("AAA", "Send code $code")
                 (activity as IrInterface).sendIrCode(code)
             }
@@ -149,6 +151,9 @@ class RemoteFragment : Fragment() {
         return layout
     }
 
+    class MyMaterialButton(context: Context): MaterialButton(context) {
+        var code: String = ""
+    }
 
 
     fun findCommandByText(text: String, buttonList: List<ButtonDTO>): String {
