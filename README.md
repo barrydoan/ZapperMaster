@@ -1,5 +1,6 @@
 # ZapperMaster
 
+![screenshot](https://github.com/barrydoan/ZapperMaster/blob/master/hardware.jpg?raw=true)
 ## Setup the arduino
 Install the arduino IDE
 Install the IR library inside the folder hardware/libs:
