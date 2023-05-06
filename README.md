@@ -18,6 +18,11 @@ The code to decode the IR signal is inside forder ZapperMaster\hardware\arduino\
 
 ## Android
 The Android application is located in ZapperMaster\phone\ZapperMaster
+Change the API_BASE
+- For phone emulator
+const val API_BASE = "http://10.0.2.2:8000/"
+- For real device. The IP address is the IP address of the web api server
+const val API_BASE = "http://192.168.137.1:8000/"
 
 ## Web api
 The web api is located in ZapperMaster\webapi\zappermaster
