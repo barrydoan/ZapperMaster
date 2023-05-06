@@ -34,7 +34,7 @@ Go to folder ZapperMaster\webapi\zappermaster
 - Go to folder ZapperMaster\webapi\zappermaster\zappermasstersite
 - Run the server: python manage.py runserver 0.0.0.0:8000
 - admin login admin/password123
-Go to file ZapperMaster\webapi\zappermaster\zappermasstersite\zappermasstersite\setting.py
+- Go to file ZapperMaster\webapi\zappermaster\zappermasstersite\zappermasstersite\setting.py
 Add the the IP address of the host the run the webapi to
 ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '192.168.137.1']
 
